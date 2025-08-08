@@ -1,31 +1,101 @@
-@import 'primereact/resources/themes/saga-blue/theme.css';
-@import 'primereact/resources/primereact.min.css';
-@import 'primeicons/primeicons.css';
-
-:root {
-  --primary-color: #8B5CF6; /* Morado moderno */
-  --text-color: #1F2937;
-  --bg-light: #F9FAFB;
-}
-
+/* Estilos generales */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-light);
-  color: var(--text-color);
-}
-
-a {
-  text-decoration: none;
-  color: var(--primary-color);
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f6f9;
+  color: #2d3748;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+/* Tarjetas de productos */
+.p-card {
+  border-radius: 12px;
+  transition: box-shadow 0.3s;
+}
+
+.p-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar */
+.p-menubar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Botones */
+.p-button-success {
+  background-color: #8b5cf6;
+  border-color: #8b5cf6;
+}
+
+.p-button-success:hover {
+  background-color: #7c4dff;
+  border-color: #7c4dff;
+}
+
+/* Texto grande */
+.text-5xl {
+  font-size: 3rem;
+}
+
+/* Espaciado */
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Estilos para el Navbar */
+.p-menubar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.p-menubar .p-menuitem-text {
+  margin-left: 1rem; /* Espacio adicional entre ícono y texto */
+}
+
+.p-menubar .p-menuitem-icon {
+  margin-right: 0.5rem; /* Espacio entre ícono y texto */
+}
+
+/* Estilos generales para los botones */
+.p-button {
+  border-radius: 8px; /* Redondear bordes */
+  transition: background-color 0.3s, color 0.3s; /* Efectos suaves */
+}
+
+.p-button-success {
+  background-color: #8b5cf6; /* Morado claro */
+  border-color: #8b5cf6;
+  color: #fff;
+}
+
+.p-button-success:hover {
+  background-color: #7c4dff; /* Sombra al pasar el mouse */
+  border-color: #7c4dff;
+}
+
+/* Botón de WhatsApp */
+.p-button.whatsapp-button {
+  background-color: #25D366; /* Verde claro */
+  border-color: #25D366;
+  color: #fff;
+}
+
+.p-button.whatsapp-button:hover {
+  background-color: #25B75E; /* Sombra al pasar el mouse */
+  border-color: #25B75E;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .text-5xl {
+    font-size: 2rem;
+  }
 }

@@ -12,8 +12,8 @@ export default function WhatsAppButton({ productName }) {
       label="Quiero este bolso"
       icon="pi pi-whatsapp"
       severity="success"
+      className="whatsapp-button" // ← Añade esta clase
       onClick={() => window.open(url, "_blank")}
-      className="w-full"
     />
   );
 }
