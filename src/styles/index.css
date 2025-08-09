@@ -1,5 +1,10 @@
 
 
+/* Definimos un color de marca para los títulos */
+.text-pearl {
+  color: #7d6b5e; /* Un tono café/amarillo que combina con el logo */
+}
+
 /* ... otros estilos ... */
 
 .transform-hover:hover {

@@ -50,7 +50,7 @@ export default function NavBar() {
       start={start}
       end={end}
       // Agregamos clases para el diseño y la sombra
-      className="p-3 shadow-2"
+      className="p-3 shadow-2 surface-50"
     />
   );
 }
