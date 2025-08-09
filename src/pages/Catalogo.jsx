@@ -4,9 +4,10 @@ import ProductCard from "../components/ProductCard";
 export default function Catalogo() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("/api/v1/productos")
+    fetch(`${API_URL}/productos`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
