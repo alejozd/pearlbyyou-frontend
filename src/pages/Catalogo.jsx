@@ -1,40 +1,45 @@
 import React, { useEffect, useState } from "react";
-import ProductCard from "../components/ProductCard";
+import ProductCarousel from "../components/ProductCarousel";
 
 export default function Catalogo() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/v1/productos")
+    const API_URL =
+      import.meta.env.VITE_API_URL || "http://localhost:3003/api/v1";
+
+    fetch(`${API_URL}/productos`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
         setLoading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error("Error:", err);
+        setLoading(false);
+      });
   }, []);
 
   if (loading) {
-    return <div className="text-center py-8">Cargando...</div>;
+    return (
+      <div className="text-center py-8">
+        <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        <p className="mt-3">Cargando bolsos...</p>
+      </div>
+    );
   }
 
   return (
     <div className="py-6 px-4 md:px-6 lg:px-8">
       <div className="text-center mb-6">
-        <h2 className="text-900 text-4xl font-bold">Nuestros Bolsos</h2>
+        <h2 className="text-900 text-4xl font-bold mb-2">Nuestros Bolsos</h2>
+        <p className="text-600 text-lg">
+          Diseños únicos, hechos a mano con amor y estilo.
+        </p>
       </div>
 
-      <div className="grid justify-content-center gap-4 md:gap-6">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="col-12 sm:col-6 md:col-4 lg:col-3 p-2"
-          >
-            <ProductCard product={product} />
-          </div>
-        ))}
-      </div>
+      <ProductCarousel products={products} />
     </div>
   );
 }

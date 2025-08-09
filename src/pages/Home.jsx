@@ -28,7 +28,7 @@ export default function Home() {
               {/* Imagen */}
               <div
                 style={{
-                  height: "220px",
+                  height: "auto",
                   overflow: "hidden",
                   borderRadius: "8px",
                 }}
