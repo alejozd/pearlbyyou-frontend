@@ -6,7 +6,7 @@ export default function Catalogo() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3003/api/v1/productos")
+    fetch("/api/v1/productos")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
