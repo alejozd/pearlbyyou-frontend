@@ -31,14 +31,13 @@ export default function Catalogo() {
   }
 
   return (
-    <div className="py-6 px-4 md:px-6 lg:px-8">
-      <div className="text-center mb-6">
+    <div className="py-0 ">
+      <div className="text-center mb-4">
         <h2 className="text-900 text-4xl font-bold mb-2">Nuestros Bolsos</h2>
-        <p className="text-600 text-lg">
+        <p className="text-600 text-lg mt-1">
           Diseños únicos, hechos a mano con amor y estilo.
         </p>
       </div>
-
       <ProductCarousel products={products} />
     </div>
   );

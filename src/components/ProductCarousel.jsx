@@ -24,13 +24,13 @@ export default function ProductCarousel({ products }) {
     );
 
     return (
-      <div className="p-2">
+      <div className="p-2 flex flex-column">
         <Card
           header={header}
           className="shadow-2 hover:shadow-4 transition-all duration-300 h-full flex flex-column surface-card cursor-pointer"
         >
           <div className="p-card-body p-0">
-            <div className="text-center pt-2">
+            <div className="text-center pt-0 px-0">
               <h4 className="mt-0 mb-1 text-900 font-bold">{product.nombre}</h4>
               <p className="mt-0 mb-2 text-xl text-900">
                 ${Number(product.precio).toLocaleString("es-CO")}
@@ -43,7 +43,7 @@ export default function ProductCarousel({ products }) {
                 {product.descripcion}
               </p>
             </div>
-            <div>
+            <div className="flex justify-content-center mt-2">
               <WhatsAppButton productName={product.nombre} />
             </div>
           </div>
