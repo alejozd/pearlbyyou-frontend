@@ -62,6 +62,20 @@ body {
   font-size: 3rem;
 }
 
+/* ... otros estilos ... */
+
+.transform-hover:hover {
+  transform: scale(1.05);
+}
+
+.shadow-4:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .text-5xl {
