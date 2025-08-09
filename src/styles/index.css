@@ -1,12 +1,15 @@
-
+body {
+  /* Usar un degradado lineal sutil */
+  background: linear-gradient(to bottom, #f2f0eb, #ffffff);
+  /* Asegurar que el degradado cubra toda la altura de la página */
+  min-height: 100vh;
+  /* El color de fondo se muestra si el degradado no es compatible */
+  background-color: #f2f0eb;
+}
 
 /* Definimos un color de marca para los títulos */
 .text-pearl {
   color: #5b4b42; /* Color café oscuro */
-}
-
-body {
-    background-color: #ffffff; /* Fondo blanco */
 }
 
 /* ... otros estilos ... */
