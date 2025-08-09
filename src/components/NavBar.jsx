@@ -3,6 +3,7 @@ import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
 import { Link } from "react-router-dom"; // Importamos el componente Link
 import logo from "../assets/images/logo.png";
+import { WHATSAPP_PHONE_NUMBER } from "../utils/constants";
 
 const items = [
   { label: "Inicio", icon: "pi pi-home", url: "/" },
@@ -22,18 +23,15 @@ export default function NavBar() {
     </Link>
   );
 
+  const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=Hola!%20Estoy%20interesado%20en%20tus%20bolsos.`;
+
   const end = (
     <Button
       label="Contactar por WhatsApp"
       icon="pi pi-whatsapp"
       severity="success"
       size="small"
-      onClick={() =>
-        window.open(
-          "https://wa.me/573001234567?text=Hola!%20Estoy%20interesado%20en%20tus%20bolsos.",
-          "_blank"
-        )
-      }
+      onClick={() => window.open(whatsappUrl, "_blank")}
     />
   );
 
