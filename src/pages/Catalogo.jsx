@@ -8,7 +8,7 @@ export default function Catalogo() {
   useEffect(() => {
     const API_URL =
       import.meta.env.VITE_API_URL || "http://localhost:3003/api/v1";
-
+    console.log("API_URL:", API_URL);
     fetch(`${API_URL}/productos`)
       .then((res) => res.json())
       .then((data) => {

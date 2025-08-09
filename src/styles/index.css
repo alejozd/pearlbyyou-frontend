@@ -1,96 +1,65 @@
-/* Estilos generales */
+/* Paleta de colores */
+:root {
+  --pearl-secondary: #f0f4f8; /* Gris claro para fondos */
+  --pearl-text: #2d3748; /* Texto oscuro */
+  --pearl-hover: #7c4dff; /* Morado al pasar el mouse */
+  --pearl-whatsapp: #25d366; /* Verde de WhatsApp */
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f6f9;
-  color: #2d3748;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* Tarjetas de productos */
-.p-card {
-  border-radius: 12px;
-  transition: box-shadow 0.3s;
-}
-
-.p-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--pearl-secondary);
+  color: var(--pearl-text);
 }
 
 /* Navbar */
 .p-menubar {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Botones */
-.p-button-success {
-  background-color: #8b5cf6;
-  border-color: #8b5cf6;
-}
-
-.p-button-success:hover {
-  background-color: #7c4dff;
-  border-color: #7c4dff;
-}
-
-/* Texto grande */
-.text-5xl {
-  font-size: 3rem;
-}
-
-/* Espaciado */
-.py-8 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-/* Estilos para el Navbar */
-.p-menubar {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  padding: 1rem;
 }
 
 .p-menubar .p-menuitem-text {
-  margin-left: 1rem; /* Espacio adicional entre ícono y texto */
+  margin-left: 0.5rem;
+  font-weight: 500;
 }
 
-.p-menubar .p-menuitem-icon {
-  margin-right: 0.5rem; /* Espacio entre ícono y texto */
-}
-
-/* Estilos generales para los botones */
+/* Botones */
 .p-button {
-  border-radius: 8px; /* Redondear bordes */
-  transition: background-color 0.3s, color 0.3s; /* Efectos suaves */
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .p-button-success {
-  background-color: #8b5cf6; /* Morado claro */
-  border-color: #8b5cf6;
-  color: #fff;
+  background-color: var(--pearl-primary);
+  border-color: var(--pearl-primary);
 }
 
 .p-button-success:hover {
-  background-color: #7c4dff; /* Sombra al pasar el mouse */
-  border-color: #7c4dff;
+  background-color: var(--pearl-hover);
+  border-color: var(--pearl-hover);
 }
 
-/* Botón de WhatsApp */
 .p-button.whatsapp-button {
-  background-color: #25D366; /* Verde claro */
-  border-color: #25D366;
+  background-color: var(--pearl-whatsapp);
+  border-color: var(--pearl-whatsapp);
   color: #fff;
 }
 
 .p-button.whatsapp-button:hover {
-  background-color: #25B75E; /* Sombra al pasar el mouse */
-  border-color: #25B75E;
+  background-color: #20b05b; /* Un verde más oscuro */
+  border-color: #20b05b;
+}
+
+/* Títulos y texto */
+.text-pearl {
+  color: var(--pearl-text);
+}
+
+.text-5xl {
+  font-size: 3rem;
 }
 
 /* Responsive */
