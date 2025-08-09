@@ -2,7 +2,11 @@
 
 /* Definimos un color de marca para los títulos */
 .text-pearl {
-  color: #7d6b5e; /* Un tono café/amarillo que combina con el logo */
+  color: #5b4b42; /* Color café oscuro */
+}
+
+body {
+    background-color: #ffffff; /* Fondo blanco */
 }
 
 /* ... otros estilos ... */

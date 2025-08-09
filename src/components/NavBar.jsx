@@ -42,15 +42,26 @@ export default function NavBar() {
         template: (item, options) => (
           // Usamos el componente Link para la navegación
           <Link to={item.url} className={options.className}>
-            <span className={options.iconClassName}></span>
-            <span className={options.labelClassName}>{item.label}</span>
+            <span
+              className={options.iconClassName}
+              style={{ color: "#5b4b42" }}
+            ></span>{" "}
+            {/* Color del ícono */}
+            <span
+              className={options.labelClassName}
+              style={{ color: "#5b4b42" }}
+            >
+              {item.label}
+            </span>{" "}
+            {/* Color del texto */}
           </Link>
         ),
       }))}
       start={start}
       end={end}
       // Agregamos clases para el diseño y la sombra
-      className="p-3 shadow-2 surface-50"
+      className="p-2 shadow-2 "
+      style={{ backgroundColor: "#e7e3d8" }}
     />
   );
 }
