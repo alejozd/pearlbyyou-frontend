@@ -1,8 +1,8 @@
 import React from "react";
 import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
+import { Link } from "react-router-dom"; // Importamos el componente Link
 import logo from "../assets/images/logo.png";
-import { Link } from "react-router-dom";
 
 const items = [
   { label: "Inicio", icon: "pi pi-home", url: "/" },
@@ -11,13 +11,15 @@ const items = [
 
 export default function NavBar() {
   const start = (
-    <div className="flex align-items-center">
+    // Envolvemos el logo en un componente Link para que sea clicable
+    <Link to="/" className="flex align-items-center">
       <img
         src={logo}
         alt="Pearl by You"
-        style={{ width: "auto", height: "auto" }}
+        // Usamos clases de PrimeFlex para controlar el tamaño y los márgenes
+        className="h-2.5rem md:h-2.5rem mr-2"
       />
-    </div>
+    </Link>
   );
 
   const end = (
@@ -32,7 +34,6 @@ export default function NavBar() {
           "_blank"
         )
       }
-      className="whatsapp-button"
     />
   );
 
@@ -40,15 +41,18 @@ export default function NavBar() {
     <Menubar
       model={items.map((item) => ({
         ...item,
-        command: () => {
-          if (item.url) {
-            window.location.href = item.url;
-          }
-        },
+        template: (item, options) => (
+          // Usamos el componente Link para la navegación
+          <Link to={item.url} className={options.className}>
+            <span className={options.iconClassName}></span>
+            <span className={options.labelClassName}>{item.label}</span>
+          </Link>
+        ),
       }))}
       start={start}
       end={end}
-      className="p-mb-4 p-menubar-lg"
+      // Agregamos clases para el diseño y la sombra
+      className="p-3 shadow-2"
     />
   );
 }
