@@ -56,7 +56,7 @@ export default function Home() {
                   className="mt-2 text-600 line-height-3"
                   style={{ flexGrow: 1 }}
                 >
-                  Diseño minimalista y elegante, ideal para eventos..
+                  Diseño minimalista y elegante, ideal para eventos.
                 </p>
                 <p className="mt-2 text-xl font-semibold text-900">$85,000</p>
               </div>
