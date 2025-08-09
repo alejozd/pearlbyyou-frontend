@@ -10,7 +10,6 @@ export default function Catalogo() {
   useEffect(() => {
     const API_URL =
       import.meta.env.VITE_API_URL || "http://localhost:3003/api/v1";
-    console.log("API_URL:", API_URL);
     fetch(`${API_URL}/productos`)
       .then((res) => res.json())
       .then((data) => {
@@ -24,7 +23,7 @@ export default function Catalogo() {
   }, []);
 
   // Creación de un array para los esqueletos
-  const skeletonProducts = Array(3).fill({});
+  // const skeletonProducts = Array(3).fill({});
 
   // Plantilla para los esqueletos
   const productSkeleton = () => {
@@ -55,7 +54,7 @@ export default function Catalogo() {
       </div>
       {loading ? (
         <ProductCarousel
-          products={skeletonProducts}
+          products={Array(3).fill({})}
           itemTemplate={productSkeleton}
         />
       ) : (
