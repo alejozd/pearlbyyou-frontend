@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCarousel from "../components/ProductCarousel";
+import { ProgressSpinner } from "primereact/progressspinner"; // Importar el componente
 
 export default function Catalogo() {
   const [products, setProducts] = useState([]);
@@ -23,9 +24,17 @@ export default function Catalogo() {
 
   if (loading) {
     return (
-      <div className="text-center py-8">
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
-        <p className="mt-3">Cargando bolsos...</p>
+      <div
+        className="flex flex-column justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <ProgressSpinner
+          style={{ width: "50px", height: "50px" }}
+          strokeWidth="8"
+          fill="var(--surface-ground)"
+          animationDuration=".5s"
+        />
+        <p className="mt-3">Cargando productos...</p>
       </div>
     );
   }
