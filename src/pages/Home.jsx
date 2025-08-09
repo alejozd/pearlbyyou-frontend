@@ -14,8 +14,8 @@ export default function Home() {
     descripcion: "Diseño minimalista y elegante, ideal para eventos.",
     // Propiedad 'imagenes' con un array de objetos
     imagenes: [
-      { url: "/images/bolsos/ISA1.jpg", orden: 0 },
-      { url: "/images/bolsos/ISA2.jpg", orden: 1 },
+      { url: "/uploads/bolsos/ISA1.jpg", orden: 0 },
+      { url: "/uploads/bolsos/ISA2.jpg", orden: 1 },
     ],
   };
 
