@@ -1,6 +1,6 @@
 import React from "react";
 import { Carousel } from "primereact/carousel";
-import { Card } from "primereact/card"; // Añadimos la tarjeta para usarla directamente
+import { Card } from "primereact/card";
 import WhatsAppButton from "./WhatsAppButton";
 
 export default function ProductCarousel({ products }) {
@@ -11,13 +11,12 @@ export default function ProductCarousel({ products }) {
   ];
 
   const productTemplate = (product) => {
-    // Definimos el "header" de la tarjeta con la imagen
     const header = (
-      <div className="overflow-hidden border-round-top">
+      // Añadimos p-0 para eliminar el padding del header
+      <div className="overflow-hidden border-round-top p-1">
         <img
           src={product.imagen_url}
           alt={product.nombre}
-          // Usamos clases de PrimeFlex para los efectos
           className="w-full h-auto object-cover transition-all duration-300 hover:scale-105"
         />
       </div>
@@ -29,8 +28,9 @@ export default function ProductCarousel({ products }) {
           header={header}
           className="shadow-2 hover:shadow-4 transition-all duration-300 h-full flex flex-column surface-card cursor-pointer"
         >
-          <div>
-            <div className="text-center">
+          {/* Contenido del cuerpo de la tarjeta */}
+          <div className="p-card-body p-0">
+            <div className="text-center p-2">
               <h4 className="mt-0 mb-1 text-900 font-bold">{product.nombre}</h4>
               <p className="mt-0 mb-2 text-xl text-900">
                 ${Number(product.precio).toLocaleString("es-CO")}
@@ -39,7 +39,6 @@ export default function ProductCarousel({ products }) {
                 className="text-600 line-height-3 text-sm overflow-hidden"
                 style={{ maxHeight: "60px" }}
               >
-                {/* Truncar el texto si es demasiado largo */}
                 {product.descripcion}
               </p>
             </div>
