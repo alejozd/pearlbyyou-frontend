@@ -27,22 +27,25 @@ export default function ProductCarousel({ products }) {
       <div className="p-2">
         <Card
           header={header}
-          // Unificamos las clases para el estilo de la tarjeta
           className="shadow-2 hover:shadow-4 transition-all duration-300 h-full flex flex-column surface-card cursor-pointer"
         >
-          {/* Contenido de la tarjeta */}
-          <div className="pt-3 flex-grow-1 flex flex-column">
-            <h4 className="mb-1 text-900 font-bold">{product.nombre}</h4>
-            <p className="mt-0 mb-3 text-xl text-900">
-              ${Number(product.precio).toLocaleString("es-CO")}
-            </p>
-            <p className="text-600 line-height-3 mt-0 mb-3 flex-grow-1">
-              {product.descripcion}
-            </p>
-          </div>
-          {/* Botón */}
-          <div className="pt-2">
-            <WhatsAppButton productName={product.nombre} />
+          <div className="p-card-body p-0">
+            <div className="text-center pt-2">
+              <h4 className="mt-0 mb-1 text-900 font-bold">{product.nombre}</h4>
+              <p className="mt-0 mb-2 text-xl text-900">
+                ${Number(product.precio).toLocaleString("es-CO")}
+              </p>
+              <p
+                className="text-600 line-height-3 text-sm overflow-hidden"
+                style={{ maxHeight: "60px" }}
+              >
+                {/* Truncar el texto si es demasiado largo */}
+                {product.descripcion}
+              </p>
+            </div>
+            <div>
+              <WhatsAppButton productName={product.nombre} />
+            </div>
           </div>
         </Card>
       </div>
