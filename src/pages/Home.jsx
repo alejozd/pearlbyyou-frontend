@@ -34,7 +34,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src="https://via.placeholder.com/300x300.png?text=Bolso+Elegance"
+                  src="/images/bolsos/ISA1.jpg"
                   alt="Bolso Elegance Mini"
                   style={{
                     width: "100%",

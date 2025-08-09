@@ -19,6 +19,11 @@ export default function ProductCard({ product }) {
           objectFit: "cover",
           borderRadius: "8px",
         }}
+        onError={(e) => {
+          console.error("❌ Imagen no encontrada:", product.imagen_url);
+          e.target.src =
+            "https://via.placeholder.com/300x300.png?text=Sin+Imagen";
+        }}
       />
       <p className="text-900 mt-3 text-xl font-semibold">${product.precio}</p>
       <p className="text-600 mt-1">{product.descripcion}</p>
