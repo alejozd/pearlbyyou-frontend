@@ -7,7 +7,7 @@ export default function ProductCarousel({ products }) {
   const responsiveOptions = [
     {
       breakpoint: "1024px",
-      numVisible: 2,
+      numVisible: 3,
       numScroll: 1,
     },
     {
@@ -92,7 +92,7 @@ export default function ProductCarousel({ products }) {
       <Carousel
         value={products}
         numScroll={1}
-        numVisible={2}
+        numVisible={3}
         responsiveOptions={responsiveOptions}
         itemTemplate={productTemplate}
         circular
