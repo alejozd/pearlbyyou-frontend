@@ -3,16 +3,17 @@ import { Carousel } from "primereact/carousel";
 import { Card } from "primereact/card";
 import WhatsAppButton from "./WhatsAppButton";
 
-export default function ProductCarousel({ products }) {
+export default function ProductCarousel({ products, itemTemplate }) {
   const responsiveOptions = [
     { breakpoint: "1024px", numVisible: 3, numScroll: 1 },
     { breakpoint: "768px", numVisible: 2, numScroll: 1 },
     { breakpoint: "560px", numVisible: 1, numScroll: 1 },
   ];
 
-  const productTemplate = (product) => {
+  // Plantilla por defecto para cuando no se pase una plantilla
+  const defaultProductTemplate = (product) => {
+    // Definimos el "header" de la tarjeta con la imagen
     const header = (
-      // Añadimos p-0 para eliminar el padding del header
       <div className="overflow-hidden border-round-top p-1">
         <img
           src={product.imagen_url}
@@ -23,14 +24,13 @@ export default function ProductCarousel({ products }) {
     );
 
     return (
-      <div className="p-2">
+      <div className="p-2 flex flex-column">
         <Card
           header={header}
           className="shadow-2 hover:shadow-4 transition-all duration-300 h-full flex flex-column surface-card cursor-pointer"
         >
-          {/* Contenido del cuerpo de la tarjeta */}
           <div className="p-card-body p-0">
-            <div className="text-center p-2">
+            <div className="p-2 text-center">
               <h4 className="mt-0 mb-1 text-900 font-bold">{product.nombre}</h4>
               <p className="mt-0 mb-2 text-xl text-900">
                 ${Number(product.precio).toLocaleString("es-CO")}
@@ -42,7 +42,7 @@ export default function ProductCarousel({ products }) {
                 {product.descripcion}
               </p>
             </div>
-            <div className="flex justify-content-center mt-2">
+            <div className="flex justify-content-center mt-0">
               <WhatsAppButton productName={product.nombre} />
             </div>
           </div>
@@ -58,7 +58,8 @@ export default function ProductCarousel({ products }) {
         numScroll={1}
         numVisible={3}
         responsiveOptions={responsiveOptions}
-        itemTemplate={productTemplate}
+        // Usar la plantilla pasada o la plantilla por defecto
+        itemTemplate={itemTemplate || defaultProductTemplate}
         circular
         autoplayInterval={5000}
       />
