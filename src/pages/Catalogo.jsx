@@ -34,7 +34,7 @@ export default function Catalogo() {
     <div className="py-0 ">
       <div className="text-center mb-4">
         <h2 className="text-900 text-4xl font-bold mb-2">Nuestros Bolsos</h2>
-        <p className="text-600 text-lg mt-1">
+        <p className="text-600 text-lg mt-0">
           Diseños únicos, hechos a mano con amor y estilo.
         </p>
       </div>
