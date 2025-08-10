@@ -17,8 +17,7 @@ export default function NavBar() {
       <img
         src={logo}
         alt="Pearl by You"
-        // Usamos clases de PrimeFlex para controlar el tamaño y los márgenes
-        className="h-2.5rem md:h-2.5rem mr-2"
+        className="h-3rem object-contain mr-2"
       />
     </Link>
   );
@@ -60,7 +59,7 @@ export default function NavBar() {
       start={start}
       end={end}
       // Agregamos clases para el diseño y la sombra
-      className="p-2 shadow-2 "
+      className="p-1 shadow-2 align-items-center"
       style={{ backgroundColor: "#e7e3d8" }}
     />
   );
