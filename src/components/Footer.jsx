@@ -80,7 +80,7 @@ export default function Footer() {
                 text
                 severity="secondary"
                 onClick={() =>
-                  window.open("https://instagram.com/pearlbyou", "_blank")
+                  window.open("https:instagram.com/pearl_byyou", "_blank")
                 }
                 aria-label="Instagram"
               />
@@ -90,7 +90,7 @@ export default function Footer() {
                 text
                 severity="secondary"
                 onClick={() =>
-                  window.open("https://facebook.com/pearlbyou", "_blank")
+                  window.open("https://facebook.com/pearlbyyou", "_blank")
                 }
                 aria-label="Facebook"
               />
@@ -100,7 +100,7 @@ export default function Footer() {
                 text
                 severity="secondary"
                 onClick={() =>
-                  window.open("https://www.tiktok.com/@pearl_byou", "_blank")
+                  window.open("https://www.tiktok.com/@pearl_byyou", "_blank")
                 }
                 aria-label="TikTok"
               />

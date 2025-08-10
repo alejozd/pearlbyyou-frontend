@@ -8,11 +8,15 @@ import { WHATSAPP_PHONE_NUMBER } from "../utils/constants";
 const items = [
   { label: "Inicio", icon: "pi pi-home", url: "/" },
   { label: "Catálogo", icon: "pi pi-shopping-bag", url: "/catalogo" },
+  {
+    label: "Sobre Nosotros",
+    icon: "pi pi-info-circle",
+    url: "/sobre-nosotros",
+  },
 ];
 
 export default function NavBar() {
   const start = (
-    // Envolvemos el logo en un componente Link para que sea clicable
     <Link to="/" className="flex align-items-center">
       <img
         src={logo}
@@ -44,14 +48,14 @@ export default function NavBar() {
             <span
               className={options.iconClassName}
               style={{ color: "#5b4b42" }}
-            ></span>{" "}
+            ></span>
             {/* Color del ícono */}
             <span
               className={options.labelClassName}
               style={{ color: "#5b4b42" }}
             >
               {item.label}
-            </span>{" "}
+            </span>
             {/* Color del texto */}
           </Link>
         ),
