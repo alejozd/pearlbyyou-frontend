@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Card } from "primereact/card";
 import { Galleria } from "primereact/galleria";
-import { Dialog } from "primereact/dialog"; // Importamos el componente Dialog
+import { Dialog } from "primereact/dialog";
 import WhatsAppButton from "./WhatsAppButton";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || "https://pearlbyou.sytes.net";
 
 export default function ProductCard({ product }) {
-  // 1. Estado para controlar el modal
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -15,10 +14,14 @@ export default function ProductCard({ product }) {
     return null;
   }
 
-  // 2. Función para abrir el modal al hacer clic en una imagen
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
     setIsModalVisible(true);
+  };
+
+  const onHideModal = () => {
+    setIsModalVisible(false);
+    setSelectedImage(null);
   };
 
   const itemTemplate = (item) => {
@@ -28,7 +31,6 @@ export default function ProductCard({ product }) {
         src={fullImageUrl}
         alt={product.nombre}
         style={{ width: "100%", display: "block", cursor: "pointer" }}
-        // Agregamos el evento onClick aquí
         onClick={() => handleImageClick(fullImageUrl)}
       />
     );
@@ -83,12 +85,13 @@ export default function ProductCard({ product }) {
         </div>
       </Card>
 
-      {/* 3. Componente Dialog para mostrar el modal */}
+      {/* Componente Dialog con estilo responsive */}
       <Dialog
         header={product.nombre}
         visible={isModalVisible}
-        style={{ width: "50vw" }}
-        onHide={() => setIsModalVisible(false)}
+        // Usamos un ancho del 90% de la pantalla y un ancho máximo de 800px
+        style={{ width: "90vw", maxWidth: "800px" }}
+        onHide={onHideModal}
         modal
       >
         {selectedImage && (

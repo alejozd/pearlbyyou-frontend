@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import { WHATSAPP_PHONE_NUMBER } from "../utils/constants";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -29,9 +30,8 @@ export default function Home() {
           </p>
         </div>
         <div className="flex justify-content-center">
-          {/* Hacemos el contenedor del ProductCard más pequeño */}
           <div
-            className="col-12 md:col-6 lg:col-3 max-w-md"
+            className="col-12 md:col-6 lg:col-3"
             style={{ maxWidth: "300px" }}
           >
             <ProductCard product={featuredProduct} />
@@ -45,7 +45,11 @@ export default function Home() {
             onClick={() => navigate("/catalogo")}
           />
         </div>
-        {/* Aumentamos el margen superior para más visibilidad */}
+        <div className="mt-7">
+          <h2 className="text-center text-pearl text-3xl font-bold mb-4">
+            Bolsos Populares
+          </h2>
+        </div>
         <div className="text-center mt-7">
           <p className="text-pearl text-lg mb-3">Síguenos en nuestras redes</p>
           <div className="flex justify-content-center gap-4">
@@ -56,7 +60,7 @@ export default function Home() {
               severity="secondary"
               aria-label="Instagram"
               onClick={() =>
-                window.open("https://instagram.com/pearlbyyou", "_blank")
+                window.open("https://instagram.com/pearlbyou", "_blank")
               }
               className="p-button-lg"
             />
@@ -67,7 +71,7 @@ export default function Home() {
               severity="secondary"
               aria-label="Facebook"
               onClick={() =>
-                window.open("https://facebook.com/pearlbyyou", "_blank")
+                window.open("https://facebook.com/pearlbyou", "_blank")
               }
               className="p-button-lg"
             />
@@ -78,10 +82,37 @@ export default function Home() {
               severity="secondary"
               aria-label="TikTok"
               onClick={() =>
-                window.open("https://www.tiktok.com/@pearl_byyou", "_blank")
+                window.open("https://www.tiktok.com/@pearl_byou", "_blank")
               }
               className="p-button-lg"
             />
+          </div>
+        </div>
+
+        {/* Nueva sección de Contacto */}
+        <div className="text-center mt-7">
+          <h2 className="text-pearl text-3xl font-bold mb-3">Contáctanos</h2>
+          <div className="flex justify-content-center flex-column align-items-center">
+            <p className="text-pearl text-lg mb-2">
+              Envíanos un mensaje por WhatsApp:
+            </p>
+            <Button
+              label={`+${WHATSAPP_PHONE_NUMBER}`}
+              icon="pi pi-whatsapp"
+              severity="success"
+              className="mb-3"
+              onClick={() =>
+                window.open(`https://wa.me/${WHATSAPP_PHONE_NUMBER}`, "_blank")
+              }
+            />
+            <p className="text-pearl text-lg">O escríbenos a nuestro correo:</p>
+            <a
+              href="mailto:tu-correo-aqui@ejemplo.com"
+              className="text-pearl text-lg font-bold"
+              style={{ textDecoration: "none" }}
+            >
+              tu-correo-aqui@ejemplo.com
+            </a>
           </div>
         </div>
       </div>
