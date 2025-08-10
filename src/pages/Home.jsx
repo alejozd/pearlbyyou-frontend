@@ -26,7 +26,7 @@ export default function Home() {
           <h1 className="text-pearl text-5xl md:text-6xl font-bold mt-0 mb-1">
             PEARL
           </h1>
-          <p className="text-pearl text-xl md:text-3xl mt-0 mb-5">
+          <p className="text-pearl text-xl md:text-3xl mt-0 mb-1">
             TU BOLSO, TU MOOD
           </p>
         </div>
