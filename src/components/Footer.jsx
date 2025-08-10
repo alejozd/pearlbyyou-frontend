@@ -16,9 +16,6 @@ export default function Footer() {
             <p className="line-height-3 text-sm">
               Tu bolso, tu mood. Accesorios únicos para cada ocasión.
             </p>
-            <p className="text-sm mt-3">
-              &copy; 2025 Pearl by You. Todos los derechos reservados.
-            </p>
           </div>
 
           {/* Sección de Enlaces */}
@@ -110,6 +107,22 @@ export default function Footer() {
             </div>
           </div>
         </div>
+      </div>
+      {/* Sección de Copyright y Autoría */}
+      <div className="text-center text-sm py-4">
+        <p className="m-0">
+          &copy; {new Date().getFullYear()} Pearl by You. Todos los derechos
+          reservados.
+        </p>
+        <p className="m-0 mt-2">
+          Desarrollado por{" "}
+          <a
+            href="mailto:alejozd79@gmail.com"
+            className="text-pearl-dark no-underline font-bold"
+          >
+            Alejandro Zambrano
+          </a>
+        </p>
       </div>
     </footer>
   );
