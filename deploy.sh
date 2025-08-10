@@ -5,7 +5,7 @@
 echo "🚀 Iniciando despliegue..."
 
 # Navega a la carpeta del frontend
-cd /var/www/pearlbyyou/frontend || { echo "❌ No se pudo acceder a la carpeta"; exit 1; }
+cd /var/www/pearlbyou/frontend || { echo "❌ No se pudo acceder a la carpeta"; exit 1; }
 
 # Detiene ejecución si hay un error
 set -e
@@ -27,7 +27,11 @@ echo "🗂️  Moviendo dist a build..."
 rm -rf build
 mv dist build
 
-# 5. Reinicia Apache para limpiar caché (opcional)
+# 5. Copia el archivo .htaccess a la carpeta build
+echo "📋 Copiando .htaccess a build..."
+cp .htaccess build/
+
+# 6. Reinicia Apache para limpiar caché (opcional)
 echo "🔄 Reiniciando Apache..."
 sudo systemctl reload apache2
 
