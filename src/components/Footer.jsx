@@ -69,7 +69,7 @@ export default function Footer() {
                 href="mailto:pearlbyyou@gmail.com"
                 className="text-pearl-dark no-underline hover:text-pearl-dark-hover transition-colors duration-200"
               >
-                tu-correo-aqui@ejemplo.com
+                pearlbyyou@gmail.com
               </a>
             </div>
             <h4 className="font-bold text-lg mt-0">Síguenos</h4>
