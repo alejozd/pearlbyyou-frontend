@@ -8,8 +8,8 @@ export default function Home() {
 
   const featuredProduct = {
     id: 1,
-    nombre: "Bolso Elegance Mini",
-    precio: 85000,
+    nombre: "Bolso ISA",
+    precio: 28000,
     descripcion: "Diseño minimalista y elegante, ideal para eventos.",
     imagenes: [
       { url: "/uploads/bolsos/ISA1.jpg", orden: 0 },
