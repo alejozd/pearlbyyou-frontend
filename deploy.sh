@@ -27,11 +27,7 @@ echo "🗂️  Moviendo dist a build..."
 rm -rf build
 mv dist build
 
-# 5. Copia el archivo .htaccess a la carpeta build
-echo "📋 Copiando .htaccess a build..."
-cp .htaccess build/
-
-# 6. Reinicia Apache para limpiar caché (opcional)
+# 5. Reinicia Apache para limpiar caché (opcional)
 echo "🔄 Reiniciando Apache..."
 sudo systemctl reload apache2
 
