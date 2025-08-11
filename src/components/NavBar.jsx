@@ -1,7 +1,8 @@
 import React from "react";
 import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
-import { Link } from "react-router-dom"; // Importamos el componente Link
+import { Link } from "react-router-dom";
+import { Tooltip } from "primereact/tooltip";
 import logo from "../assets/images/logo.png";
 import { WHATSAPP_PHONE_NUMBER } from "../utils/constants";
 
@@ -29,13 +30,53 @@ export default function NavBar() {
   const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=Hola!%20Estoy%20interesado%20en%20tus%20bolsos.`;
 
   const end = (
-    <Button
-      label="Contactar por WhatsApp"
-      icon="pi pi-whatsapp"
-      severity="success"
-      size="small"
-      onClick={() => window.open(whatsappUrl, "_blank")}
-    />
+    <div className="flex align-items-center gap-2">
+      {/* Íconos de redes sociales */}
+      <Tooltip target=".instagram-btn" position="bottom" />
+      <Button
+        icon="pi pi-instagram"
+        rounded
+        text
+        severity="secondary"
+        onClick={() => window.open("https://instagram.com/pearlbyou", "_blank")}
+        aria-label="Instagram"
+        className="instagram-btn"
+        data-pr-tooltip="Instagram"
+      />
+      <Tooltip target=".facebook-btn" position="bottom" />
+      <Button
+        icon="pi pi-facebook"
+        rounded
+        text
+        severity="secondary"
+        onClick={() => window.open("https://facebook.com/pearlbyou", "_blank")}
+        aria-label="Facebook"
+        className="facebook-btn"
+        data-pr-tooltip="Facebook"
+      />
+      <Tooltip target=".tiktok-btn" position="bottom" />
+      <Button
+        icon="pi pi-tiktok"
+        rounded
+        text
+        severity="secondary"
+        onClick={() =>
+          window.open("https://www.tiktok.com/@pearl_byou", "_blank")
+        }
+        aria-label="TikTok"
+        className="tiktok-btn"
+        data-pr-tooltip="TikTok"
+      />
+      {/* Botón de WhatsApp */}
+      <Button
+        // label="Contactar por WhatsApp"
+        label="WhatsApp"
+        icon="pi pi-whatsapp"
+        severity="success"
+        size="small"
+        onClick={() => window.open(whatsappUrl, "_blank")}
+      />
+    </div>
   );
 
   return (

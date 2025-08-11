@@ -83,6 +83,7 @@ export default function Footer() {
                   window.open("https:instagram.com/pearl_byyou", "_blank")
                 }
                 aria-label="Instagram"
+                size="large"
               />
               <Button
                 icon="pi pi-facebook"
@@ -93,6 +94,7 @@ export default function Footer() {
                   window.open("https://facebook.com/pearlbyyou", "_blank")
                 }
                 aria-label="Facebook"
+                size="large"
               />
               <Button
                 icon="pi pi-tiktok"
@@ -103,6 +105,7 @@ export default function Footer() {
                   window.open("https://www.tiktok.com/@pearl_byyou", "_blank")
                 }
                 aria-label="TikTok"
+                size="large"
               />
             </div>
           </div>
