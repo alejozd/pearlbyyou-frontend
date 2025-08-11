@@ -66,7 +66,7 @@ export default function Footer() {
             <div className="flex align-items-center mb-4">
               <i className="pi pi-envelope mr-2 text-xl" />
               <a
-                href="mailto:tu-correo-aqui@ejemplo.com"
+                href="mailto:pearlbyyou@gmail.com"
                 className="text-pearl-dark no-underline hover:text-pearl-dark-hover transition-colors duration-200"
               >
                 tu-correo-aqui@ejemplo.com
