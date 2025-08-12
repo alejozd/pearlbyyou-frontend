@@ -16,7 +16,7 @@ export default function AdminProducts() {
 
   useEffect(() => {
     fetchProducts();
-  }, [showInactive]); // ✅ Se ejecuta cada vez que cambia showInactive
+  }, [showInactive]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -25,7 +25,7 @@ export default function AdminProducts() {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-      // ✅ Usa un endpoint diferente según si se muestran los productos activos o inactivos
+      // ✅ Rutas corregidas
       const endpoint = showInactive ? "/productos/inactivos" : "/productos";
       const response = await apiClient.get(endpoint, config);
       setProducts(response.data);
@@ -55,6 +55,7 @@ export default function AdminProducts() {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
+      // ✅ Ruta corregida
       await apiClient.put(`/productos/${productId}/desactivar`, {}, config);
       toast.current.show({
         severity: "success",
@@ -73,13 +74,13 @@ export default function AdminProducts() {
     }
   };
 
-  // ✅ Función para activar un producto
   const handleActivate = async (productId) => {
     try {
       const token = localStorage.getItem("authToken");
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
+      // ✅ Ruta corregida
       await apiClient.put(`/productos/${productId}/activar`, {}, config);
       toast.current.show({
         severity: "success",

@@ -18,7 +18,7 @@ export default function AdminProductForm() {
   const [product, setProduct] = useState({
     nombre: "",
     descripcion: "",
-    precio: null,
+    precio: 0, // ✅ Inicializamos el precio a 0
   });
   const [selectedImages, setSelectedImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
@@ -32,6 +32,7 @@ export default function AdminProductForm() {
 
   const fetchProduct = async (productId) => {
     try {
+      // ✅ Ruta corregida: removemos el /api/v1/
       const response = await apiClient.get(`/productos/${productId}`);
       const fetchedProduct = response.data;
       setProduct(fetchedProduct);
@@ -50,7 +51,7 @@ export default function AdminProductForm() {
     try {
       const token = localStorage.getItem("authToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      // ✅ Llamada a un nuevo endpoint para eliminar una imagen
+      // ✅ Ruta corregida
       await apiClient.delete(`/imagenes/${imageId}`, config);
 
       toast.current.show({
@@ -58,7 +59,6 @@ export default function AdminProductForm() {
         summary: "Éxito",
         detail: "Imagen eliminada.",
       });
-      // Actualizar la lista de imágenes en el estado
       setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
     } catch (error) {
       console.error("Error al eliminar la imagen:", error);
@@ -80,7 +80,6 @@ export default function AdminProductForm() {
   };
 
   const onImageSelect = (e) => {
-    // Almacena los archivos seleccionados en un array
     setSelectedImages(e.files);
   };
 
@@ -93,7 +92,6 @@ export default function AdminProductForm() {
     formData.append("descripcion", product.descripcion);
     formData.append("precio", product.precio);
 
-    // Agregar las nuevas imágenes al FormData
     selectedImages.forEach((file) => {
       formData.append("imagenes", file);
     });
@@ -108,14 +106,16 @@ export default function AdminProductForm() {
       };
 
       if (id) {
-        await apiClient.put(`/api/v1/productos/${id}`, formData, config);
+        // ✅ Ruta corregida
+        await apiClient.put(`/productos/${id}`, formData, config);
         toast.current.show({
           severity: "success",
           summary: "Éxito",
           detail: "Producto actualizado.",
         });
       } else {
-        await apiClient.post("/api/v1/productos", formData, config);
+        // ✅ Ruta corregida
+        await apiClient.post("/productos", formData, config);
         toast.current.show({
           severity: "success",
           summary: "Éxito",
@@ -123,7 +123,7 @@ export default function AdminProductForm() {
         });
       }
       setTimeout(() => {
-        setLoading(false); // ✅ Desactivar el spinner antes de la redirección
+        setLoading(false);
         navigate("/admin/productos");
       }, 1500);
     } catch (error) {
@@ -175,8 +175,8 @@ export default function AdminProductForm() {
               value={product.precio}
               onValueChange={handlePriceChange}
               mode="currency"
-              currency="USD"
-              locale="en-US"
+              currency="COP" // ✅ Cambiamos a COP para pesos colombianos
+              locale="es-CO" // ✅ Cambiamos el locale para un formato correcto
               required
             />
           </div>
@@ -206,13 +206,15 @@ export default function AdminProductForm() {
           )}
 
           <div className="field mt-4">
-            <label className="block mb-2">Imágenes</label>
+            <label className="block mb-2">
+              {id ? "Subir Nuevas Imágenes" : "Subir Imágenes"}
+            </label>
             <FileUpload
               name="imagenes"
               multiple
               accept="image/*"
-              maxFileSize={1000000} // Límite de 1MB por archivo
-              onSelect={onImageSelect} // ✅ Usar onSelect para manejar los archivos
+              maxFileSize={1000000}
+              onSelect={onImageSelect}
               onClear={() => setSelectedImages([])}
               emptyTemplate={
                 <p className="m-0">
