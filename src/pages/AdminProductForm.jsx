@@ -8,7 +8,6 @@ import { FileUpload } from "primereact/fileupload";
 import { useNavigate, useParams } from "react-router-dom";
 import apiClient from "../utils/axios";
 import { Toast } from "primereact/toast";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { Image } from "primereact/image";
 
 export default function AdminProductForm() {
@@ -32,7 +31,7 @@ export default function AdminProductForm() {
 
   const fetchProduct = async (productId) => {
     try {
-      // ✅ Ruta corregida: removemos el /api/v1/
+      // ✅ Ruta corregida: removemos el /api/v1
       const response = await apiClient.get(`/productos/${productId}`);
       const fetchedProduct = response.data;
       setProduct(fetchedProduct);
@@ -188,7 +187,8 @@ export default function AdminProductForm() {
                 {existingImages.map((imagen) => (
                   <div key={imagen.id} className="relative">
                     <Image
-                      src={`http://localhost:3003/${imagen.url}`}
+                      //   src={`https://pearlbyyou.sytes.net/${imagen.url}`}
+                      src={`${import.meta.env.VITE_BASE_URL}${imagen.url}`}
                       alt={`Imagen ${imagen.id}`}
                       width="100"
                       preview
