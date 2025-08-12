@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 import { InputTextarea } from "primereact/inputtextarea";
 import { FileUpload } from "primereact/fileupload";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../utils/axios";
 import { Toast } from "primereact/toast";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Image } from "primereact/image";
@@ -32,7 +32,7 @@ export default function AdminProductForm() {
 
   const fetchProduct = async (productId) => {
     try {
-      const response = await axios.get(`/api/v1/productos/${productId}`);
+      const response = await apiClient.get(`/productos/${productId}`);
       const fetchedProduct = response.data;
       setProduct(fetchedProduct);
       setExistingImages(fetchedProduct.imagenes || []);
@@ -51,7 +51,7 @@ export default function AdminProductForm() {
       const token = localStorage.getItem("authToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
       // ✅ Llamada a un nuevo endpoint para eliminar una imagen
-      await axios.delete(`/api/v1/imagenes/${imageId}`, config);
+      await apiClient.delete(`/imagenes/${imageId}`, config);
 
       toast.current.show({
         severity: "success",
@@ -108,14 +108,14 @@ export default function AdminProductForm() {
       };
 
       if (id) {
-        await axios.put(`/api/v1/productos/${id}`, formData, config);
+        await apiClient.put(`/api/v1/productos/${id}`, formData, config);
         toast.current.show({
           severity: "success",
           summary: "Éxito",
           detail: "Producto actualizado.",
         });
       } else {
-        await axios.post("/api/v1/productos", formData, config);
+        await apiClient.post("/api/v1/productos", formData, config);
         toast.current.show({
           severity: "success",
           summary: "Éxito",

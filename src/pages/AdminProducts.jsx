@@ -5,12 +5,12 @@ import { Column } from "primereact/column";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import axios from "axios";
+import apiClient from "../utils/axios";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showInactive, setShowInactive] = useState(false); // ✅ Nuevo estado
+  const [showInactive, setShowInactive] = useState(false);
   const navigate = useNavigate();
   const toast = useRef(null);
 
@@ -26,10 +26,8 @@ export default function AdminProducts() {
         headers: { Authorization: `Bearer ${token}` },
       };
       // ✅ Usa un endpoint diferente según si se muestran los productos activos o inactivos
-      const endpoint = showInactive
-        ? "/api/v1/productos/inactivos"
-        : "/api/v1/productos";
-      const response = await axios.get(endpoint, config);
+      const endpoint = showInactive ? "/productos/inactivos" : "/productos";
+      const response = await apiClient.get(endpoint, config);
       setProducts(response.data);
       setLoading(false);
     } catch (error) {
@@ -57,7 +55,7 @@ export default function AdminProducts() {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-      await axios.put(`/api/v1/productos/${productId}/desactivar`, {}, config);
+      await apiClient.put(`/productos/${productId}/desactivar`, {}, config);
       toast.current.show({
         severity: "success",
         summary: "Éxito",
@@ -82,7 +80,7 @@ export default function AdminProducts() {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-      await axios.put(`/api/v1/productos/${productId}/activar`, {}, config);
+      await apiClient.put(`/productos/${productId}/activar`, {}, config);
       toast.current.show({
         severity: "success",
         summary: "Éxito",
