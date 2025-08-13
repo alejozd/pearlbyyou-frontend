@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // Importa los componentes de los layouts
 import PublicLayout from "./layouts/PublicLayout";
 import AdminLayout from "./layouts/AdminLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Importa las páginas públicas
 import Home from "./pages/Home";
@@ -31,11 +32,13 @@ export default function App() {
         <Route path="/admin/login" element={<AdminLoginPage />} />
 
         {/* ✅ Agrupa las rutas de administración que necesitan el AdminLayout */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="productos" element={<AdminProducts />} />
-          <Route path="productos/nuevo" element={<AdminProductForm />} />
-          <Route path="productos/editar/:id" element={<AdminProductForm />} />
+        <Route path="/admin" element={<ProtectedRoute />}>
+          <Route element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="productos" element={<AdminProducts />} />
+            <Route path="productos/nuevo" element={<AdminProductForm />} />
+            <Route path="productos/editar/:id" element={<AdminProductForm />} />
+          </Route>
         </Route>
       </Routes>
     </Router>
