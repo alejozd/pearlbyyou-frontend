@@ -126,19 +126,22 @@ export default function AdminProducts() {
       <div className="flex gap-2">
         <Button
           icon="pi pi-pencil"
-          className="p-button-rounded p-button-warning"
+          severity="warning"
+          rounded
           onClick={() => handleEdit(rowData.id)}
         />
         {showInactive ? (
           <Button
             icon="pi pi-check"
-            className="p-button-rounded p-button-success"
+            severity="success"
+            rounded
             onClick={() => confirmActivate(rowData)}
           />
         ) : (
           <Button
             icon="pi pi-times"
-            className="p-button-rounded p-button-danger"
+            severity="danger"
+            rounded
             onClick={() => confirmDeactivate(rowData)}
           />
         )}

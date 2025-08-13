@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +25,7 @@ export default function AdminDashboard() {
           <Button
             label="Gestionar Productos"
             icon="pi pi-box"
+            severity="primary"
             onClick={() => navigate("/admin/productos")}
           />
           {/* Aquí podrías agregar más botones para otras secciones */}
