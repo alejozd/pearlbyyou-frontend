@@ -14,12 +14,12 @@ export default function AdminProductForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useRef(null);
+  const fileUploadRef = useRef(null); // Ref para el componente FileUpload
   const [product, setProduct] = useState({
     nombre: "",
     descripcion: "",
-    precio: 0, // ✅ Inicializamos el precio a 0
+    precio: 0,
   });
-  const [selectedImages, setSelectedImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +31,6 @@ export default function AdminProductForm() {
 
   const fetchProduct = async (productId) => {
     try {
-      // ✅ Ruta corregida: removemos el /api/v1
       const response = await apiClient.get(`/productos/${productId}`);
       const fetchedProduct = response.data;
       setProduct(fetchedProduct);
@@ -50,7 +49,6 @@ export default function AdminProductForm() {
     try {
       const token = localStorage.getItem("authToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      // ✅ Ruta corregida
       await apiClient.delete(`/imagenes/${imageId}`, config);
 
       toast.current.show({
@@ -78,10 +76,6 @@ export default function AdminProductForm() {
     setProduct((prev) => ({ ...prev, precio: e.value }));
   };
 
-  const onImageSelect = (e) => {
-    setSelectedImages(e.files);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -91,9 +85,12 @@ export default function AdminProductForm() {
     formData.append("descripcion", product.descripcion);
     formData.append("precio", product.precio);
 
-    selectedImages.forEach((file) => {
-      formData.append("imagenes", file);
-    });
+    if (fileUploadRef.current) {
+      const selectedImages = fileUploadRef.current.getFiles();
+      selectedImages.forEach((file) => {
+        formData.append("imagenes", file);
+      });
+    }
 
     try {
       const token = localStorage.getItem("authToken");
@@ -105,7 +102,6 @@ export default function AdminProductForm() {
       };
 
       if (id) {
-        // ✅ Ruta corregida
         await apiClient.put(`/productos/${id}`, formData, config);
         toast.current.show({
           severity: "success",
@@ -113,7 +109,6 @@ export default function AdminProductForm() {
           detail: "Producto actualizado.",
         });
       } else {
-        // ✅ Ruta corregida
         await apiClient.post("/productos", formData, config);
         toast.current.show({
           severity: "success",
@@ -174,8 +169,8 @@ export default function AdminProductForm() {
               value={product.precio}
               onValueChange={handlePriceChange}
               mode="currency"
-              currency="COP" // ✅ Cambiamos a COP para pesos colombianos
-              locale="es-CO" // ✅ Cambiamos el locale para un formato correcto
+              currency="COP"
+              locale="es-CO"
               required
             />
           </div>
@@ -187,7 +182,6 @@ export default function AdminProductForm() {
                 {existingImages.map((imagen) => (
                   <div key={imagen.id} className="relative">
                     <Image
-                      //   src={`https://pearlbyyou.sytes.net/${imagen.url}`}
                       src={`${import.meta.env.VITE_BASE_URL}${imagen.url}`}
                       alt={`Imagen ${imagen.id}`}
                       width="100"
@@ -210,12 +204,14 @@ export default function AdminProductForm() {
               {id ? "Subir Nuevas Imágenes" : "Subir Imágenes"}
             </label>
             <FileUpload
+              ref={fileUploadRef}
               name="imagenes"
               multiple
               accept="image/*"
               maxFileSize={1000000}
-              onSelect={onImageSelect}
-              onClear={() => setSelectedImages([])}
+              onClear={() => fileUploadRef.current.clear()}
+              auto={false}
+              customUpload={true} // ✅ Agregamos esta propiedad clave
               emptyTemplate={
                 <p className="m-0">
                   Arrastra y suelta imágenes aquí para subirlas.
