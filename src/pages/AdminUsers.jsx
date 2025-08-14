@@ -4,9 +4,11 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown"; // ✅ Importa el componente Dropdown
+import { Password } from "primereact/password"; // ✅ Importar el componente Password
+import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { FloatLabel } from "primereact/floatlabel"; // ✅ Importar el componente FloatLabel
 import apiClient from "../utils/axios";
 import { jwtDecode } from "jwt-decode";
 
@@ -14,11 +16,13 @@ export default function AdminUsers() {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [displayDialog, setDisplayDialog] = useState(false);
+  // ✅ Añadir el estado para 'confirmPassword'
   const [newAdmin, setNewAdmin] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
     role: "admin",
-  }); // ✅ Añade el rol por defecto
+  });
   const [editAdmin, setEditAdmin] = useState(null);
   const [displayEditDialog, setDisplayEditDialog] = useState(false);
   const toast = useRef(null);
@@ -27,7 +31,6 @@ export default function AdminUsers() {
   const decodedToken = token ? jwtDecode(token) : null;
   const currentAdminId = decodedToken ? decodedToken.id : null;
 
-  // ✅ Opciones para el Dropdown de roles
   const roleOptions = [
     { label: "Admin", value: "admin" },
     { label: "Super Admin", value: "super_admin" },
@@ -58,11 +61,25 @@ export default function AdminUsers() {
   }, []);
 
   const handleCreate = async () => {
+    // ✅ Validar que las contraseñas coincidan
+    if (newAdmin.password !== newAdmin.confirmPassword) {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Las contraseñas no coinciden.",
+      });
+      return;
+    }
+
+    // ✅ Desestructurar los datos, excluyendo la contraseña de confirmación
+    const { confirmPassword: _, ...adminData } = newAdmin;
+
     try {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-      await apiClient.post("/admin-management", newAdmin, config);
+      // ✅ Enviar solo los datos necesarios al backend
+      await apiClient.post("/admin-management", adminData, config);
       toast.current.show({
         severity: "success",
         summary: "Éxito",
@@ -70,7 +87,13 @@ export default function AdminUsers() {
       });
       fetchAdmins();
       setDisplayDialog(false);
-      setNewAdmin({ email: "", password: "", role: "admin" });
+      // ✅ Limpiar el estado, incluyendo 'confirmPassword'
+      setNewAdmin({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        role: "admin",
+      });
     } catch (error) {
       console.error("Error al crear administrador:", error);
       toast.current.show({
@@ -82,6 +105,7 @@ export default function AdminUsers() {
     }
   };
 
+  // ... (Funciones handleEdit, handleUpdate, confirmToggleStatus, toggleStatus, activeBodyTemplate y actionBodyTemplate sin cambios)
   const handleEdit = (rowData) => {
     setEditAdmin({ ...rowData });
     setDisplayEditDialog(true);
@@ -252,43 +276,64 @@ export default function AdminUsers() {
       >
         <div className="p-fluid">
           <div className="p-field mb-3">
-            <label htmlFor="email">Correo Electrónico</label>
-            <InputText
-              id="email"
-              value={newAdmin.email}
-              onChange={(e) =>
-                setNewAdmin({ ...newAdmin, email: e.target.value })
-              }
-            />
+            <FloatLabel>
+              {" "}
+              {/* ✅ Usar FloatLabel */}
+              <InputText
+                id="email"
+                value={newAdmin.email}
+                onChange={(e) =>
+                  setNewAdmin({ ...newAdmin, email: e.target.value })
+                }
+              />
+              <label htmlFor="email">Correo Electrónico</label>
+            </FloatLabel>
+          </div>
+          <div className="p-field mb-3">
+            <FloatLabel>
+              {" "}
+              {/* ✅ Usar FloatLabel */}
+              <Password
+                id="password"
+                value={newAdmin.password}
+                onChange={(e) =>
+                  setNewAdmin({ ...newAdmin, password: e.target.value })
+                }
+                toggleMask // ✅ Añadir el botón para mostrar/ocultar la contraseña
+              />
+              <label htmlFor="password">Contraseña</label>
+            </FloatLabel>
           </div>
           <div className="p-field mb-3">
             {" "}
-            {/* ✅ Añade el campo de contraseña */}
-            <label htmlFor="password">Contraseña</label>
-            <InputText
-              id="password"
-              type="password"
-              value={newAdmin.password}
-              onChange={(e) =>
-                setNewAdmin({ ...newAdmin, password: e.target.value })
-              }
-            />
+            {/* ✅ Campo de confirmar contraseña */}
+            <FloatLabel>
+              <Password
+                id="confirmPassword"
+                value={newAdmin.confirmPassword}
+                onChange={(e) =>
+                  setNewAdmin({ ...newAdmin, confirmPassword: e.target.value })
+                }
+                toggleMask
+              />
+              <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+            </FloatLabel>
           </div>
           <div className="p-field">
-            {" "}
-            {/* ✅ Añade el campo de rol para el nuevo admin */}
-            <label htmlFor="new-role">Rol</label>
-            <Dropdown
-              id="new-role"
-              value={newAdmin.role}
-              options={roleOptions}
-              onChange={(e) => setNewAdmin({ ...newAdmin, role: e.value })}
-            />
+            <FloatLabel>
+              <Dropdown
+                id="new-role"
+                value={newAdmin.role}
+                options={roleOptions}
+                onChange={(e) => setNewAdmin({ ...newAdmin, role: e.value })}
+              />
+              <label htmlFor="new-role">Rol</label>
+            </FloatLabel>
           </div>
         </div>
       </Dialog>
 
-      {/* ✅ Diálogo para editar un administrador existente */}
+      {/* ✅ Diálogo para editar un administrador existente (sin cambios aquí) */}
       <Dialog
         header="Editar Administrador"
         visible={displayEditDialog}
@@ -298,23 +343,27 @@ export default function AdminUsers() {
       >
         <div className="p-fluid">
           <div className="p-field mb-3">
-            <label htmlFor="edit-email">Correo Electrónico</label>
-            <InputText
-              id="edit-email"
-              value={editAdmin?.email || ""}
-              onChange={(e) =>
-                setEditAdmin({ ...editAdmin, email: e.target.value })
-              }
-            />
+            <FloatLabel>
+              <InputText
+                id="edit-email"
+                value={editAdmin?.email || ""}
+                onChange={(e) =>
+                  setEditAdmin({ ...editAdmin, email: e.target.value })
+                }
+              />
+              <label htmlFor="edit-email">Correo Electrónico</label>
+            </FloatLabel>
           </div>
           <div className="p-field">
-            <label htmlFor="edit-role">Rol</label>
-            <Dropdown // ✅ Reemplaza InputText con Dropdown
-              id="edit-role"
-              value={editAdmin?.role || ""}
-              options={roleOptions}
-              onChange={(e) => setEditAdmin({ ...editAdmin, role: e.value })}
-            />
+            <FloatLabel>
+              <Dropdown
+                id="edit-role"
+                value={editAdmin?.role || ""}
+                options={roleOptions}
+                onChange={(e) => setEditAdmin({ ...editAdmin, role: e.value })}
+              />
+              <label htmlFor="edit-role">Rol</label>
+            </FloatLabel>
           </div>
         </div>
       </Dialog>
