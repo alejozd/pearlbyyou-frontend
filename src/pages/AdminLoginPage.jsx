@@ -9,6 +9,7 @@ import { Toast } from "primereact/toast";
 import { useRef } from "react";
 import { Password } from "primereact/password";
 import { FloatLabel } from "primereact/floatlabel";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -69,17 +70,20 @@ export default function AdminLoginPage() {
       style={{ minHeight: "calc(100vh - 56px)" }}
     >
       <Toast ref={toast} />
-      <Card title="Acceso de Administrador" className="w-full md:w-25rem">
+      <Card
+        title="Acceso de Administrador"
+        className="w-full md:w-25rem relative"
+      >
         <form onSubmit={handleLogin} className="flex flex-column gap-4 p-fluid">
-          <span className="p-float-label">
+          <FloatLabel>
             <InputText
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full"
+              disabled={loading}
             />
             <label htmlFor="email">Correo Electrónico</label>
-          </span>
+          </FloatLabel>
           <FloatLabel>
             <Password
               id="password"
@@ -89,6 +93,7 @@ export default function AdminLoginPage() {
               className="w-full"
               feedback={false}
               toggleMask
+              disabled={loading}
             />
             <label htmlFor="password">Contraseña</label>
           </FloatLabel>
@@ -99,6 +104,12 @@ export default function AdminLoginPage() {
             loading={loading}
           />
         </form>
+        {/* ✅ Overlay condicional para mostrar el spinner */}
+        {loading && (
+          <div className="absolute top-0 left-0 w-full h-full flex justify-content-center align-items-center bg-white-alpha-50">
+            <ProgressSpinner />
+          </div>
+        )}
       </Card>
     </div>
   );
