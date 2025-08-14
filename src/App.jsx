@@ -16,6 +16,7 @@ const AdminLoginPage = lazy(() => import("./pages/AdminLoginPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminProducts = lazy(() => import("./pages/AdminProducts"));
 const AdminProductForm = lazy(() => import("./pages/AdminProductForm"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 
 export default function App() {
   return (
@@ -72,6 +73,14 @@ export default function App() {
               element={
                 <Suspense fallback={<div>Cargando...</div>}>
                   <AdminProductForm />
+                </Suspense>
+              }
+            />
+            <Route
+              path="usuarios"
+              element={
+                <Suspense fallback={<div>Cargando...</div>}>
+                  <AdminUsers />
                 </Suspense>
               }
             />
