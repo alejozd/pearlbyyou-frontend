@@ -7,15 +7,19 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toast } from "primereact/toast";
 import { useRef } from "react";
+import { Password } from "primereact/password";
+import { FloatLabel } from "primereact/floatlabel";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const toast = useRef(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       // ✅ Asegúrate de que esta URL sea la correcta para tu backend
@@ -23,7 +27,7 @@ export default function AdminLoginPage() {
         email,
         password,
       });
-      console.log("Respuesta del servidor:", response.data);
+      // console.log("Respuesta del servidor:", response.data);
 
       if (response.data.token) {
         // ✅ Login exitoso: guarda el token en el almacenamiento local
@@ -34,12 +38,13 @@ export default function AdminLoginPage() {
           detail: "Redirigiendo...",
           life: 1500,
         });
-
+        setLoading(false);
         // ✅ Redirige al panel de administración
         setTimeout(() => {
           navigate("/admin");
         }, 1500);
       } else {
+        setLoading(false);
         toast.current.show({
           severity: "error",
           summary: "Error",
@@ -47,6 +52,7 @@ export default function AdminLoginPage() {
         });
       }
     } catch (err) {
+      setLoading(false);
       console.error("Error de login:", err);
       toast.current.show({
         severity: "error",
@@ -64,7 +70,7 @@ export default function AdminLoginPage() {
     >
       <Toast ref={toast} />
       <Card title="Acceso de Administrador" className="w-full md:w-25rem">
-        <form onSubmit={handleLogin} className="flex flex-column gap-3">
+        <form onSubmit={handleLogin} className="flex flex-column gap-4">
           <span className="p-float-label">
             <InputText
               id="email"
@@ -88,6 +94,7 @@ export default function AdminLoginPage() {
             type="submit"
             label="Iniciar Sesión"
             className="w-full mt-3"
+            loading={loading}
           />
         </form>
       </Card>
