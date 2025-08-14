@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
     >
       <Toast ref={toast} />
       <Card title="Acceso de Administrador" className="w-full md:w-25rem">
-        <form onSubmit={handleLogin} className="flex flex-column gap-4">
+        <form onSubmit={handleLogin} className="flex flex-column gap-4 p-fluid">
           <span className="p-float-label">
             <InputText
               id="email"
@@ -80,16 +80,18 @@ export default function AdminLoginPage() {
             />
             <label htmlFor="email">Correo Electrónico</label>
           </span>
-          <span className="p-float-label">
-            <InputText
+          <FloatLabel>
+            <Password
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full"
+              feedback={false}
+              toggleMask
             />
             <label htmlFor="password">Contraseña</label>
-          </span>
+          </FloatLabel>
           <Button
             type="submit"
             label="Iniciar Sesión"
