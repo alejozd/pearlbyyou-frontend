@@ -189,6 +189,10 @@ export default function AdminProducts() {
         loading={loading}
         emptyMessage="No se encontraron productos."
         dataKey="id"
+        size="small"
+        paginator
+        rows={5}
+        rowsPerPageOptions={[5, 10, 25, 50]}
       >
         <Column field="id" header="ID" />
         <Column field="nombre" header="Nombre" />
