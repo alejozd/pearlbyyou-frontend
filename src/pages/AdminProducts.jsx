@@ -192,11 +192,18 @@ export default function AdminProducts() {
         size="small"
         paginator
         rows={5}
-        rowsPerPageOptions={[5, 10, 25, 50]}
+        rowsPerPageOptions={[5, 10, 15, 20, 25, 50]}
+        paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
+        currentPageReportTemplate="{first} a {last} de {totalRecords}"
       >
         <Column field="id" header="ID" />
-        <Column field="nombre" header="Nombre" />
-        <Column field="precio" header="Precio" body={priceBodyTemplate} />
+        <Column field="nombre" header="Nombre" sortable />
+        <Column
+          field="precio"
+          header="Precio"
+          sortable
+          body={priceBodyTemplate}
+        />
         <Column header="Acciones" body={actionBodyTemplate} />
       </DataTable>
     </div>
