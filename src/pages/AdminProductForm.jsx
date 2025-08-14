@@ -23,6 +23,7 @@ export default function AdminProductForm() {
   });
   const [existingImages, setExistingImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [imagesToDelete, setImagesToDelete] = useState([]);
 
   useEffect(() => {
     if (id) {
@@ -46,29 +47,17 @@ export default function AdminProductForm() {
     }
   };
 
-  const handleImageDelete = async (imageId) => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      await apiClient.delete(`/productos/imagenes/${imageId}`, config);
-
-      toast.current.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Imagen eliminada.",
-      });
-      setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
-    } catch (error) {
-      console.error("Error al eliminar la imagen:", error);
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "No se pudo eliminar la imagen.",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleImageDelete = (imageId) => {
+    // ✅ Agrega el ID de la imagen al estado de 'imagesToDelete'
+    setImagesToDelete((prev) => [...prev, imageId]);
+    // ✅ Elimina la imagen de la vista del usuario
+    setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
+    toast.current.show({
+      severity: "info",
+      summary: "Listo",
+      detail:
+        "Imagen marcada para eliminar. Haz clic en 'Guardar' para confirmar.",
+    });
   };
 
   const handleChange = (e) => {
@@ -93,6 +82,11 @@ export default function AdminProductForm() {
           Authorization: `Bearer ${token}`,
         },
       };
+
+      // ✅ Paso 1: Eliminar las imágenes marcadas para borrar
+      for (const imageId of imagesToDelete) {
+        await apiClient.delete(`/productos/imagenes/${imageId}`, config);
+      }
 
       if (id) {
         // ✅ En MODO EDICIÓN:
