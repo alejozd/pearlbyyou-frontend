@@ -196,7 +196,7 @@ export default function AdminProducts() {
         paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
         currentPageReportTemplate="{first} a {last} de {totalRecords}"
       >
-        <Column field="id" header="ID" />
+        <Column field="id" header="ID" hidden />
         <Column field="nombre" header="Nombre" sortable />
         <Column
           field="precio"

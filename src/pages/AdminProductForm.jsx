@@ -23,6 +23,7 @@ export default function AdminProductForm() {
   });
   const [existingImages, setExistingImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(false);
   const [imagesToDelete, setImagesToDelete] = useState([]);
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export default function AdminProductForm() {
   }, [id]);
 
   const fetchProduct = async (productId) => {
+    setInitialLoading(true);
     try {
       const response = await apiClient.get(`/productos/${productId}`);
       const fetchedProduct = response.data;
@@ -44,6 +46,8 @@ export default function AdminProductForm() {
         summary: "Error",
         detail: "No se pudo cargar el producto para editar.",
       });
+    } finally {
+      setInitialLoading(false);
     }
   };
 
@@ -182,7 +186,7 @@ export default function AdminProductForm() {
       <Toast ref={toast} />
       <Card
         title={id ? "Editar Producto" : "Crear Producto"}
-        className="w-full md:w-35rem"
+        className="w-full md:w-35rem relative"
       >
         <form onSubmit={handleSubmit}>
           <div className="p-fluid">
@@ -194,6 +198,7 @@ export default function AdminProductForm() {
                 value={product.nombre}
                 onChange={handleChange}
                 required
+                disabled={initialLoading || loading}
               />
             </div>
             <div className="field">
@@ -205,6 +210,7 @@ export default function AdminProductForm() {
                 onChange={handleChange}
                 rows={5}
                 required
+                disabled={initialLoading || loading}
               />
             </div>
             <div className="field">
@@ -218,6 +224,7 @@ export default function AdminProductForm() {
                 currency="COP"
                 locale="es-CO"
                 required
+                disabled={initialLoading || loading}
               />
             </div>
             {id && existingImages.length > 0 && (
@@ -237,6 +244,7 @@ export default function AdminProductForm() {
                         className="p-button-rounded p-button-danger p-button-outlined p-button-sm absolute"
                         style={{ top: 0, right: 0 }}
                         onClick={() => handleImageDelete(imagen.id)}
+                        disabled={initialLoading || loading}
                       />
                     </div>
                   ))}
@@ -255,6 +263,7 @@ export default function AdminProductForm() {
                 customUpload={true}
                 chooseLabel="Seleccionar Archivos"
                 uploadHandler={myUploader}
+                disabled={initialLoading || loading}
                 emptyTemplate={
                   <p className="m-0">
                     Arrastra y suelta imágenes aquí para subirlas.
@@ -284,7 +293,7 @@ export default function AdminProductForm() {
               icon="pi pi-times"
               severity="danger"
               onClick={() => navigate("/admin/productos")}
-              disabled={loading}
+              disabled={initialLoading || loading}
             />
             <Button
               type="submit"
@@ -292,10 +301,16 @@ export default function AdminProductForm() {
               icon="pi pi-save"
               loading={loading}
               severity="success"
-              disabled={loading}
+              disabled={initialLoading || loading}
             />
           </div>
         </form>
+        {/* ✅ Overlay condicional para mostrar el spinner de carga inicial */}
+        {initialLoading && (
+          <div className="absolute top-0 left-0 w-full h-full flex justify-content-center align-items-center bg-white-alpha-50">
+            <ProgressSpinner />
+          </div>
+        )}
       </Card>
     </div>
   );
