@@ -126,9 +126,11 @@ export default function AdminProducts() {
       <div className="flex gap-2">
         <Button
           icon="pi pi-pencil"
-          severity="warning"
+          severity="help"
           rounded
           onClick={() => handleEdit(rowData.id)}
+          tooltip="Editar"
+          tooltipOptions={{ position: "left" }}
         />
         {showInactive ? (
           <Button
@@ -136,6 +138,8 @@ export default function AdminProducts() {
             severity="success"
             rounded
             onClick={() => confirmActivate(rowData)}
+            tooltip="Activar"
+            tooltipOptions={{ position: "right" }}
           />
         ) : (
           <Button
@@ -143,6 +147,8 @@ export default function AdminProducts() {
             severity="danger"
             rounded
             onClick={() => confirmDeactivate(rowData)}
+            tooltip="Desactivar"
+            tooltipOptions={{ position: "right" }}
           />
         )}
       </div>
