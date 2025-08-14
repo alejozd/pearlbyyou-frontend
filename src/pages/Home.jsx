@@ -30,7 +30,7 @@ export default function Home() {
         </div>
         <div className="flex justify-content-center">
           <div
-            className="col-12 md:col-6 lg:col-3"
+            className="col-12 md:col-6 lg:col-4"
             style={{ maxWidth: "300px" }}
           >
             <ProductCard product={featuredProduct} />

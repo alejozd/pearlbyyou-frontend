@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -14,11 +14,7 @@ export default function AdminProducts() {
   const navigate = useNavigate();
   const toast = useRef(null);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [showInactive]);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("authToken");
@@ -39,7 +35,11 @@ export default function AdminProducts() {
         detail: "No se pudieron cargar los productos.",
       });
     }
-  };
+  }, [showInactive]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handleCreate = () => {
     navigate("/admin/productos/nuevo");
