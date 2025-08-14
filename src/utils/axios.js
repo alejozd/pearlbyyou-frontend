@@ -2,8 +2,9 @@ import axios from "axios";
 
 // Crear una instancia de Axios con la URL base de tu API
 const apiClient = axios.create({
-  //   baseURL: "http://localhost:3003/api/v1", // Ajusta esta URL si es diferente
-  baseURL: "https://pearlbyyou.sytes.net/api/v1", // URL de producción
+  // baseURL: "http://localhost:3003/api/v1", // Ajusta esta URL si es diferente
+  // baseURL: "https://pearlbyyou.sytes.net/api/v1", // URL de producción
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },

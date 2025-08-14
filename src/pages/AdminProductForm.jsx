@@ -15,7 +15,7 @@ export default function AdminProductForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useRef(null);
-  const fileUploadRef = useRef(null); // Ref para el componente FileUpload
+  const fileUploadRef = useRef(null);
   const [product, setProduct] = useState({
     nombre: "",
     descripcion: "",
@@ -67,7 +67,7 @@ export default function AdminProductForm() {
         detail: "No se pudo eliminar la imagen.",
       });
     } finally {
-      setLoading(false); // ✅ Desactivar el loading siempre, al final
+      setLoading(false);
     }
   };
 
@@ -80,40 +80,84 @@ export default function AdminProductForm() {
     setProduct((prev) => ({ ...prev, precio: e.value }));
   };
 
+  // ❌ Se eliminó la función onImageSelect ya que no es necesaria para la lógica de handleSubmit
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const formData = new FormData();
-    formData.append("nombre", product.nombre);
-    formData.append("descripcion", product.descripcion);
-    formData.append("precio", product.precio);
-
-    if (fileUploadRef.current) {
-      const selectedImages = fileUploadRef.current.getFiles();
-      selectedImages.forEach((file) => {
-        formData.append("imagenes", file);
-      });
-    }
 
     try {
       const token = localStorage.getItem("authToken");
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       };
 
       if (id) {
-        await apiClient.put(`/productos/${id}`, formData, config);
+        // ✅ En MODO EDICIÓN:
+        // Paso 1: Actualiza solo los datos del producto (nombre, descripción, precio).
+        const productData = new FormData();
+        productData.append("nombre", product.nombre);
+        productData.append("descripcion", product.descripcion);
+        productData.append("precio", product.precio);
+
+        // Aquí se hace la llamada PUT sin imágenes
+        await apiClient.put(`/productos/${id}`, productData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        // Paso 2: Si el usuario ha seleccionado nuevas imágenes, haz una segunda llamada POST.
+        const selectedImages = fileUploadRef.current
+          ? fileUploadRef.current.getFiles()
+          : [];
+        if (selectedImages.length > 0) {
+          console.log(
+            "Intentando subir nuevas imágenes a:",
+            `/productos/imagenes/${id}`
+          ); // ✅ Agrega este console.log
+          const imagesFormData = new FormData();
+          selectedImages.forEach((file) => {
+            imagesFormData.append("imagenes", file);
+          });
+
+          await apiClient.post(`/productos/imagenes/${id}`, imagesFormData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          });
+        }
+
         toast.current.show({
           severity: "success",
           summary: "Éxito",
           detail: "Producto actualizado.",
         });
       } else {
-        await apiClient.post("/productos", formData, config);
+        // ✅ En MODO CREACIÓN: La lógica original era correcta.
+        const formData = new FormData();
+        formData.append("nombre", product.nombre);
+        formData.append("descripcion", product.descripcion);
+        formData.append("precio", product.precio);
+
+        const selectedImages = fileUploadRef.current
+          ? fileUploadRef.current.getFiles()
+          : [];
+        selectedImages.forEach((file) => {
+          formData.append("imagenes", file);
+        });
+
+        await apiClient.post("/productos", formData, {
+          headers: {
+            ...config.headers,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
         toast.current.show({
           severity: "success",
           summary: "Éxito",
@@ -136,11 +180,8 @@ export default function AdminProductForm() {
     }
   };
 
-  // Plantilla para la barra de progreso (si la necesitas)
-  const myUploader = () => {
-    // Aquí puedes manejar la lógica de subida personalizada si la necesitaras
-    // e.files son los archivos seleccionados
-  };
+  // ❌ Se eliminó la función myUploader ya que la subida es manual
+  const myUploader = () => {};
 
   return (
     <div className="flex justify-content-center m-5">
@@ -149,9 +190,7 @@ export default function AdminProductForm() {
         title={id ? "Editar Producto" : "Crear Producto"}
         className="w-full md:w-35rem"
       >
-        {/* ❌ Elimina p-fluid de aquí */}
         <form onSubmit={handleSubmit}>
-          {/* ✅ Envuelve los campos que quieres que se expandan con un div p-fluid */}
           <div className="p-fluid">
             <div className="field">
               <label htmlFor="nombre">Nombre</label>
@@ -187,8 +226,6 @@ export default function AdminProductForm() {
                 required
               />
             </div>
-
-            {/* ✅ Sección de imágenes existentes */}
             {id && existingImages.length > 0 && (
               <div className="field mt-4">
                 <label className="block mb-2">Imágenes Existentes</label>
@@ -212,8 +249,6 @@ export default function AdminProductForm() {
                 </div>
               </div>
             )}
-
-            {/* ✅ Sección de subida de nuevas imágenes */}
             <div className="field mt-4">
               <FileUpload
                 ref={fileUploadRef}
