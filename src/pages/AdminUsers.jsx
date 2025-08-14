@@ -4,24 +4,34 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown"; // ✅ Importa el componente Dropdown
 import { Toast } from "primereact/toast";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"; // ✅ Importa ConfirmDialog
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import apiClient from "../utils/axios";
-import { jwtDecode } from "jwt-decode"; // ✅ Importa jwtDecode para obtener el ID del usuario actual
+import { jwtDecode } from "jwt-decode";
 
 export default function AdminUsers() {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [displayDialog, setDisplayDialog] = useState(false);
-  const [newAdmin, setNewAdmin] = useState({ email: "", password: "" });
-  const [editAdmin, setEditAdmin] = useState(null); // ✅ Nuevo estado para editar
-  const [displayEditDialog, setDisplayEditDialog] = useState(false); // ✅ Nuevo estado para el diálogo de edición
+  const [newAdmin, setNewAdmin] = useState({
+    email: "",
+    password: "",
+    role: "admin",
+  }); // ✅ Añade el rol por defecto
+  const [editAdmin, setEditAdmin] = useState(null);
+  const [displayEditDialog, setDisplayEditDialog] = useState(false);
   const toast = useRef(null);
 
-  // ✅ Obtener el ID del usuario actual para deshabilitar la auto-desactivación
   const token = localStorage.getItem("authToken");
   const decodedToken = token ? jwtDecode(token) : null;
   const currentAdminId = decodedToken ? decodedToken.id : null;
+
+  // ✅ Opciones para el Dropdown de roles
+  const roleOptions = [
+    { label: "Admin", value: "admin" },
+    { label: "Super Admin", value: "super_admin" },
+  ];
 
   const fetchAdmins = async () => {
     setLoading(true);
@@ -60,7 +70,7 @@ export default function AdminUsers() {
       });
       fetchAdmins();
       setDisplayDialog(false);
-      setNewAdmin({ email: "", password: "" });
+      setNewAdmin({ email: "", password: "", role: "admin" });
     } catch (error) {
       console.error("Error al crear administrador:", error);
       toast.current.show({
@@ -72,13 +82,11 @@ export default function AdminUsers() {
     }
   };
 
-  // ✅ Nueva función para manejar la edición
   const handleEdit = (rowData) => {
     setEditAdmin({ ...rowData });
     setDisplayEditDialog(true);
   };
 
-  // ✅ Nueva función para actualizar el administrador
   const handleUpdate = async () => {
     try {
       const config = {
@@ -108,7 +116,6 @@ export default function AdminUsers() {
     }
   };
 
-  // ✅ Nueva función para manejar el cambio de estado (activar/desactivar)
   const confirmToggleStatus = (rowData) => {
     confirmDialog({
       message: `¿Estás seguro de que quieres ${
@@ -120,7 +127,6 @@ export default function AdminUsers() {
     });
   };
 
-  // ✅ Lógica para cambiar el estado
   const toggleStatus = async (rowData) => {
     try {
       const config = {
@@ -149,7 +155,6 @@ export default function AdminUsers() {
     }
   };
 
-  // ✅ Plantilla para el estado de activo (se ve mejor con un tag o un icono)
   const activeBodyTemplate = (rowData) => {
     return (
       <span
@@ -169,7 +174,7 @@ export default function AdminUsers() {
           severity="info"
           onClick={() => handleEdit(rowData)}
         />
-        {rowData.id !== currentAdminId && ( // ✅ La comprobación se hace con el ID
+        {rowData.id !== currentAdminId && (
           <Button
             icon={rowData.is_active ? "pi pi-lock" : "pi pi-unlock"}
             rounded
@@ -208,7 +213,7 @@ export default function AdminUsers() {
   return (
     <div className="card">
       <Toast ref={toast} />
-      <ConfirmDialog /> {/* ✅ ConfirmDialog debe estar aquí */}
+      <ConfirmDialog />
       <h2 className="mb-4">Gestión de Administradores</h2>
       <Button
         label="Crear Nuevo Administrador"
@@ -216,6 +221,7 @@ export default function AdminUsers() {
         onClick={() => setDisplayDialog(true)}
         className="mb-4"
       />
+
       <DataTable
         value={admins}
         loading={loading}
@@ -235,6 +241,7 @@ export default function AdminUsers() {
           style={{ width: "120px" }}
         />
       </DataTable>
+
       {/* ✅ Diálogo para crear un nuevo administrador */}
       <Dialog
         header="Crear Nuevo Administrador"
@@ -254,7 +261,9 @@ export default function AdminUsers() {
               }
             />
           </div>
-          <div className="p-field">
+          <div className="p-field mb-3">
+            {" "}
+            {/* ✅ Añade el campo de contraseña */}
             <label htmlFor="password">Contraseña</label>
             <InputText
               id="password"
@@ -265,8 +274,20 @@ export default function AdminUsers() {
               }
             />
           </div>
+          <div className="p-field">
+            {" "}
+            {/* ✅ Añade el campo de rol para el nuevo admin */}
+            <label htmlFor="new-role">Rol</label>
+            <Dropdown
+              id="new-role"
+              value={newAdmin.role}
+              options={roleOptions}
+              onChange={(e) => setNewAdmin({ ...newAdmin, role: e.value })}
+            />
+          </div>
         </div>
       </Dialog>
+
       {/* ✅ Diálogo para editar un administrador existente */}
       <Dialog
         header="Editar Administrador"
@@ -288,12 +309,11 @@ export default function AdminUsers() {
           </div>
           <div className="p-field">
             <label htmlFor="edit-role">Rol</label>
-            <InputText
+            <Dropdown // ✅ Reemplaza InputText con Dropdown
               id="edit-role"
               value={editAdmin?.role || ""}
-              onChange={(e) =>
-                setEditAdmin({ ...editAdmin, role: e.target.value })
-              }
+              options={roleOptions}
+              onChange={(e) => setEditAdmin({ ...editAdmin, role: e.value })}
             />
           </div>
         </div>
