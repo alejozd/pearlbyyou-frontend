@@ -228,9 +228,17 @@ export default function AdminUsers() {
         label="Cancelar"
         icon="pi pi-times"
         onClick={() => setDisplayEditDialog(false)}
-        className="p-button-text"
+        severity="danger"
+        text
+        raised
+        // className="p-button-text"
       />
-      <Button label="Guardar" icon="pi pi-check" onClick={handleUpdate} />
+      <Button
+        label="Guardar"
+        icon="pi pi-check"
+        onClick={handleUpdate}
+        severity="success"
+      />
     </div>
   );
 
@@ -342,7 +350,7 @@ export default function AdminUsers() {
         onHide={() => setDisplayEditDialog(false)}
       >
         <div className="p-fluid">
-          <div className="p-field mb-3">
+          <div className="p-field mb-4">
             <FloatLabel>
               <InputText
                 id="edit-email"

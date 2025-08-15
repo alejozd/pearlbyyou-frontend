@@ -23,6 +23,7 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
+      console.log("Intentando iniciar sesión con:", { email, password });
       // ✅ Asegúrate de que esta URL sea la correcta para tu backend
       const response = await axios.post("/api/v1/auth/login", {
         email,
