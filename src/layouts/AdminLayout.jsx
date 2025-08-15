@@ -44,6 +44,13 @@ export default function AdminLayout() {
         navigate("/admin/productos");
       },
     },
+    {
+      label: "Conetnido Web",
+      icon: "pi pi-file-edit",
+      command: () => {
+        navigate("/admin/settings");
+      },
+    },
   ];
 
   if (userRole === "super_admin") {

@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Link } from "react-router-dom";
 import { WHATSAPP_PHONE_NUMBER } from "../utils/constants";
+import apiClient from "../utils/axios"; // ✅ Importa apiClient
 
 export default function Footer() {
+  const [footerText, setFooterText] = useState("Cargando footer..."); // Estado para el texto dinámico
   const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=Hola!%20Estoy%20interesado%20en%20tus%20bolsos.`;
+
+  useEffect(() => {
+    const fetchFooterContent = async () => {
+      try {
+        // La ruta /settings es pública, no necesita token
+        const response = await apiClient.get("/settings");
+        if (response.data && response.data.footer_text) {
+          setFooterText(response.data.footer_text);
+        } else {
+          // Texto por defecto si no se encuentra en la API
+          setFooterText(
+            `© ${new Date().getFullYear()} Pearl by You. Todos los derechos reservados.`
+          );
+        }
+      } catch (error) {
+        console.error("Error al cargar contenido del footer:", error);
+        // Texto por defecto en caso de error de carga
+        setFooterText(
+          `© ${new Date().getFullYear()} Pearl by You. Todos los derechos reservados.`
+        );
+      }
+    };
+
+    fetchFooterContent();
+  }, []); // El efecto se ejecuta solo una vez al montar el componente
 
   return (
     <footer className="bg-pearl-light text-pearl-dark py-6 mt-7">
@@ -111,12 +138,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      {/* Sección de Copyright y Autoría */}
+      {/* Sección de Copyright y Autoría dinámica */}
       <div className="text-center text-sm py-4">
-        <p className="m-0">
-          &copy; {new Date().getFullYear()} Pearl by You. Todos los derechos
-          reservados.
-        </p>
+        <p className="m-0">{footerText}</p> {/* ✅ Usa el estado dinámico */}
         <p className="m-0 mt-2">
           Desarrollado por{" "}
           <a

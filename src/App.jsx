@@ -17,6 +17,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminProducts = lazy(() => import("./pages/AdminProducts"));
 const AdminProductForm = lazy(() => import("./pages/AdminProductForm"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
+import AdminSettings from "./pages/AdminSettings";
 
 export default function App() {
   return (
@@ -84,6 +85,7 @@ export default function App() {
                 </Suspense>
               }
             />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Route>
       </Routes>

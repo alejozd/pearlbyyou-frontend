@@ -1,26 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { Toast } from "primereact/toast";
 import ProductCarousel from "../components/ProductCarousel";
 import { Skeleton } from "primereact/skeleton";
 import { Card } from "primereact/card";
+import apiClient from "../utils/axios";
 
 export default function Catalogo() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const toast = useRef(null);
+
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    try {
+      // ✅ Usa apiClient para todas las llamadas a la API de productos
+      const response = await apiClient.get("/productos");
+      setProducts(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al obtener los productos:", error);
+      setLoading(false);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudieron cargar los productos.",
+      });
+    }
+  }, []); // Dependencia de useCallback
 
   useEffect(() => {
-    const API_URL =
-      import.meta.env.VITE_API_URL || "http://localhost:3003/api/v1";
-    fetch(`${API_URL}/productos`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-        setLoading(false);
-      });
-  }, []);
+    fetchProducts();
+  }, [fetchProducts]);
 
   // Creación de un array para los esqueletos
   // const skeletonProducts = Array(3).fill({});

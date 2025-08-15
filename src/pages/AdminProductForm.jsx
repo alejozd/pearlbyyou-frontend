@@ -11,6 +11,8 @@ import { Toast } from "primereact/toast";
 import { Image } from "primereact/image";
 import { ProgressSpinner } from "primereact/progressspinner";
 
+const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL;
+
 export default function AdminProductForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -234,7 +236,7 @@ export default function AdminProductForm() {
                   {existingImages.map((imagen) => (
                     <div key={imagen.id} className="relative">
                       <Image
-                        src={`${import.meta.env.VITE_BASE_URL}${imagen.url}`}
+                        src={`${BASE_IMG_URL}${imagen.url}`}
                         alt={`Imagen ${imagen.id}`}
                         width="100"
                         preview

@@ -4,7 +4,7 @@ import { Galleria } from "primereact/galleria";
 import { Dialog } from "primereact/dialog";
 import WhatsAppButton from "./WhatsAppButton";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL || "https://pearlbyou.sytes.net";
+const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL;
 
 export default function ProductCard({ product }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -25,7 +25,7 @@ export default function ProductCard({ product }) {
   };
 
   const itemTemplate = (item) => {
-    const fullImageUrl = `${BASE_URL}${item.url}`;
+    const fullImageUrl = `${BASE_IMG_URL}${item.url}`;
     return (
       <img
         src={fullImageUrl}
@@ -37,7 +37,7 @@ export default function ProductCard({ product }) {
   };
 
   const thumbnailTemplate = (item) => {
-    const fullImageUrl = `${BASE_URL}${item.url}`;
+    const fullImageUrl = `${BASE_IMG_URL}${item.url}`;
     return (
       <img
         src={fullImageUrl}

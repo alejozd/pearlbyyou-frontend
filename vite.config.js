@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   // El target del proxy es el backend completo para desarrollo
   // y la URL base para producción (lo que permite el proxy)
   const proxyTarget = env.VITE_BASE_URL || "http://localhost:3003";
+  // const proxyTarget = env.VITE_API_URL || "http://localhost:3003";
 
   return {
     plugins: [react()],
@@ -16,7 +17,8 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: proxyTarget,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, "/api"),
+          // rewrite: (path) => path.replace(/^\/api/, "/api"),
+          rewrite: (path) => path,
         },
       },
     },
