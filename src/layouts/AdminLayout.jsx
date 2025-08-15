@@ -45,7 +45,7 @@ export default function AdminLayout() {
       },
     },
     {
-      label: "Conetnido Web",
+      label: "Contenido Web",
       icon: "pi pi-file-edit",
       command: () => {
         navigate("/admin/settings");
