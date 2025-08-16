@@ -204,6 +204,7 @@ export default function AdminUsers() {
   };
 
   const actionBodyTemplate = (rowData) => {
+    console.log("Test");
     return (
       <div className="flex flex-wrap gap-2">
         <Button
@@ -211,6 +212,8 @@ export default function AdminUsers() {
           rounded
           severity="info"
           onClick={() => handleEdit(rowData)}
+          tooltip="Editar"
+          tooltipOptions={{ position: "left" }}
         />
         {rowData.id !== currentAdminId && (
           <Button
@@ -218,6 +221,8 @@ export default function AdminUsers() {
             rounded
             severity={rowData.is_active ? "danger" : "success"}
             onClick={() => confirmToggleStatus(rowData)}
+            tooltip={rowData.is_active ? "Desactivar" : "Activar"}
+            tooltipOptions={{ position: "right" }}
           />
         )}
       </div>
