@@ -50,6 +50,7 @@ export default function AdminProducts() {
   };
 
   const handleDeactivate = async (productId) => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("authToken");
       const config = {
@@ -71,10 +72,13 @@ export default function AdminProducts() {
         detail:
           error.response?.data?.message || "Error al desactivar el producto.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleActivate = async (productId) => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("authToken");
       const config = {
@@ -96,6 +100,8 @@ export default function AdminProducts() {
         detail:
           error.response?.data?.message || "Error al activar el producto.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 

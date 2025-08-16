@@ -4,11 +4,11 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password"; // ✅ Importar el componente Password
+import { Password } from "primereact/password";
 import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { FloatLabel } from "primereact/floatlabel"; // ✅ Importar el componente FloatLabel
+import { FloatLabel } from "primereact/floatlabel";
 import apiClient from "../utils/axios";
 import { jwtDecode } from "jwt-decode";
 
@@ -61,6 +61,7 @@ export default function AdminUsers() {
   }, []);
 
   const handleCreate = async () => {
+    setLoading(true);
     // ✅ Validar que las contraseñas coincidan
     if (newAdmin.password !== newAdmin.confirmPassword) {
       toast.current.show({
@@ -68,6 +69,7 @@ export default function AdminUsers() {
         summary: "Error",
         detail: "Las contraseñas no coinciden.",
       });
+      setLoading(false);
       return;
     }
 
@@ -102,6 +104,8 @@ export default function AdminUsers() {
         detail:
           error.response?.data?.message || "Error al crear el administrador.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,6 +116,7 @@ export default function AdminUsers() {
   };
 
   const handleUpdate = async () => {
+    setLoading(true);
     try {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
@@ -137,6 +142,8 @@ export default function AdminUsers() {
           error.response?.data?.message ||
           "Error al actualizar el administrador.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -156,6 +163,7 @@ export default function AdminUsers() {
   };
 
   const toggleStatus = async (rowData) => {
+    setLoading(true);
     try {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
@@ -180,6 +188,8 @@ export default function AdminUsers() {
         summary: "Error",
         detail: error.response?.data?.message || "Error al cambiar el estado.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
