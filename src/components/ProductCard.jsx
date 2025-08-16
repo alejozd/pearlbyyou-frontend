@@ -65,16 +65,25 @@ export default function ProductCard({ product }) {
       <Card
         header={header}
         className="shadow-2 hover:shadow-4 transition-all duration-300 h-full flex flex-column surface-card"
+        style={{ height: "100%" }}
       >
         <div className="p-card-body p-0 -m-1">
-          <div className="p-2 text-center">
+          <div className="p-2 text-center ">
             <h4 className="mt-0 mb-1 text-900 font-bold">{product.nombre}</h4>
             <p className="mt-0 mb-2 text-xl text-900">
               ${Number(product.precio).toLocaleString("es-CO")}
             </p>
             <p
               className="text-600 line-height-3 text-sm overflow-hidden"
-              style={{ maxHeight: "60px" }}
+              style={{
+                height: "60px",
+                // maxHeight: "60px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "-webkit-box",
+                WebkitLineClamp: "3",
+                WebkitBoxOrient: "vertical",
+              }}
             >
               {product.descripcion}
             </p>
