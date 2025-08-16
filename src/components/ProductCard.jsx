@@ -67,9 +67,17 @@ export default function ProductCard({ product }) {
         className="shadow-2 hover:shadow-4 transition-all duration-300 h-full flex flex-column surface-card"
         style={{ height: "100%" }}
       >
-        <div className="p-card-body p-0 -m-1">
+        <div
+          className="p-card-body p-0 -m-3"
+          style={{ paddingTop: "0.25rem 0.5rem" }}
+        >
           <div className="p-2 text-center ">
-            <h4 className="mt-0 mb-1 text-900 font-bold">{product.nombre}</h4>
+            <h4
+              className="mt-0 mb-1 text-900 font-bold"
+              style={{ marginTop: "-0.5rem" }}
+            >
+              {product.nombre}
+            </h4>
             <p className="mt-0 mb-2 text-xl text-900">
               ${Number(product.precio).toLocaleString("es-CO")}
             </p>
