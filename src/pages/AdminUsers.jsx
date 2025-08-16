@@ -144,9 +144,13 @@ export default function AdminUsers() {
     confirmDialog({
       message: `¿Estás seguro de que quieres ${
         rowData.is_active ? "desactivar" : "activar"
-      } a este administrador?`,
+      } a  ${rowData.nombre || rowData.email}?`,
       header: "Confirmar",
       icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Sí",
+      rejectLabel: "No",
+      acceptClassName: "p-button-success",
+      rejectClassName: "p-button-danger",
       accept: () => toggleStatus(rowData),
     });
   };

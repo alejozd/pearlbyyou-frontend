@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
-import { jwtDecode } from "jwt-decode"; // ✅ Corrección: Importación nombrada
+import { jwtDecode } from "jwt-decode";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -12,10 +12,22 @@ export default function AdminLayout() {
     const token = localStorage.getItem("authToken");
     if (token) {
       try {
-        const decodedToken = jwtDecode(token); // ✅ Corrección: Uso de la función jwtDecode
-        setUserRole(decodedToken.role);
+        const decodedToken = jwtDecode(token);
+
+        // ✅ Lógica para verificar la expiración del token
+        const currentTime = Date.now() / 1000; // Tiempo actual en segundos (timestamp UNIX)
+        if (decodedToken.exp < currentTime) {
+          // Si el token ha expirado
+          console.error("El token ha expirado. Redirigiendo al login.");
+          localStorage.removeItem("authToken"); // Elimina el token caducado
+          navigate("/admin/login");
+        } else {
+          // El token es válido y no ha expirado
+          setUserRole(decodedToken.role);
+        }
       } catch (error) {
-        console.error("Token no válido:", error);
+        // Si el token es inválido o corrupto (jwtDecode falla)
+        console.error("Token no válido o corrupto:", error);
         localStorage.removeItem("authToken");
         navigate("/admin/login");
       }

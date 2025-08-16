@@ -106,6 +106,8 @@ export default function AdminProducts() {
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Sí",
       rejectLabel: "No",
+      acceptClassName: "p-button-success",
+      rejectClassName: "p-button-danger",
       accept: () => handleDeactivate(rowData.id),
     });
   };
@@ -117,6 +119,8 @@ export default function AdminProducts() {
       icon: "pi pi-check",
       acceptLabel: "Sí",
       rejectLabel: "No",
+      acceptClassName: "p-button-success",
+      rejectClassName: "p-button-danger",
       accept: () => handleActivate(rowData.id),
     });
   };
