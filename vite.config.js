@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const proxyTarget = env.VITE_BASE_URL || "http://localhost:3003";
 
   return {
+    base: "/",
     plugins: [react()],
     server: {
       proxy: {
