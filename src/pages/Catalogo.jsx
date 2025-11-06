@@ -13,9 +13,23 @@ export default function Catalogo() {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      // ✅ Usa apiClient para todas las llamadas a la API de productos
+      // Usa apiClient para todas las llamadas a la API de productos
       const response = await apiClient.get("/productos");
-      setProducts(response.data);
+
+      //FIX CLAVE: Verificar si la respuesta es un array antes de establecer el estado
+      const data = response.data;
+      if (Array.isArray(data)) {
+        setProducts(data); // Solo actualiza si es una lista (array)
+      } else {
+        // Si no es un array (por ejemplo, es {error: "..."} o null),
+        // establece una lista vacía para evitar que el .map() colapse la aplicación.
+        setProducts([]);
+        console.error(
+          "La API de productos no devolvió un array. Se recibió:",
+          data
+        );
+      }
+
       setLoading(false);
     } catch (error) {
       console.error("Error al obtener los productos:", error);
