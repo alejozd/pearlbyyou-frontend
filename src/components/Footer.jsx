@@ -2,154 +2,70 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Link } from "react-router-dom";
 import { WHATSAPP_PHONE_NUMBER } from "../utils/constants";
-import apiClient from "../utils/axios"; // ✅ Importa apiClient
+import apiClient from "../utils/axios";
 
 export default function Footer() {
-  const [footerText, setFooterText] = useState("Cargando footer..."); // Estado para el texto dinámico
+  const [footerText, setFooterText] = useState("Cargando footer...");
   const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=Hola!%20Estoy%20interesado%20en%20tus%20bolsos.`;
 
   useEffect(() => {
     const fetchFooterContent = async () => {
       try {
-        // La ruta /settings es pública, no necesita token
         const response = await apiClient.get("/settings");
-        if (response.data && response.data.footer_text) {
-          setFooterText(response.data.footer_text);
-        } else {
-          // Texto por defecto si no se encuentra en la API
-          setFooterText(
-            `© ${new Date().getFullYear()} Pearl by You. Todos los derechos reservados.`
-          );
-        }
-      } catch (error) {
-        console.error("Error al cargar contenido del footer:", error);
-        // Texto por defecto en caso de error de carga
         setFooterText(
-          `© ${new Date().getFullYear()} Pearl by You. Todos los derechos reservados.`
+          response.data?.footer_text ||
+            `© ${new Date().getFullYear()} Pearl by You. Todos los derechos reservados.`
         );
+      } catch {
+        setFooterText(`© ${new Date().getFullYear()} Pearl by You. Todos los derechos reservados.`);
       }
     };
 
     fetchFooterContent();
-  }, []); // El efecto se ejecuta solo una vez al montar el componente
+  }, []);
 
   return (
-    <footer className="bg-pearl-light text-pearl-dark py-6 mt-7">
-      <div className="px-4 md:px-2 lg:px-8">
+    <footer className="page-shell mt-8 mb-5">
+      <div className="soft-card p-4 md:p-5">
         <div className="grid">
-          {/* Sección de Logo y Copyright */}
           <div className="col-12 md:col-4">
-            <h3 className="font-bold text-3xl">PEARL</h3>
-            <p className="line-height-3 text-sm">
-              Tu bolso, tu mood. Accesorios únicos para cada ocasión.
+            <h3 className="font-semibold text-2xl m-0 mb-2">PEARL</h3>
+            <p className="line-height-3 text-sm text-pearl-soft m-0">
+              Tu bolso, tu mood. Piezas pensadas para elevar tu look todos los días.
             </p>
           </div>
 
-          {/* Sección de Enlaces */}
           <div className="col-12 md:col-4">
-            <h3 className="font-bold text-2xl">Enlaces</h3>
+            <h4 className="font-semibold text-xl mt-0 mb-2">Navegación</h4>
             <ul className="list-none p-0 m-0 line-height-3">
-              <li className="mb-2">
-                <Link
-                  to="/"
-                  className="text-pearl-dark no-underline hover:text-pearl-dark-hover transition-colors duration-200"
-                >
-                  Inicio
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link
-                  to="/catalogo"
-                  className="text-pearl-dark no-underline hover:text-pearl-dark-hover transition-colors duration-200"
-                >
-                  Catálogo
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/sobre-nosotros"
-                  className="text-pearl-dark no-underline hover:text-pearl-dark-hover transition-colors duration-200"
-                >
-                  Sobre Nosotros
-                </Link>
-              </li>
+              <li><Link to="/" className="no-underline">Inicio</Link></li>
+              <li><Link to="/catalogo" className="no-underline">Catálogo</Link></li>
+              <li><Link to="/sobre-nosotros" className="no-underline">Sobre Nosotros</Link></li>
             </ul>
           </div>
 
-          {/* Sección de Contacto y Redes Sociales */}
           <div className="col-12 md:col-4">
-            <h3 className="font-bold text-2xl">Contáctanos</h3>
-            <div className="flex align-items-center mb-2">
-              <i className="pi pi-whatsapp mr-2 text-xl" />
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-pearl-dark no-underline hover:text-pearl-dark-hover transition-colors duration-200"
-              >
+            <h4 className="font-semibold text-xl mt-0 mb-2">Contacto</h4>
+            <p className="m-0 mb-2 text-sm">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="no-underline">
                 +{WHATSAPP_PHONE_NUMBER}
               </a>
-            </div>
-            <div className="flex align-items-center mb-4">
-              <i className="pi pi-envelope mr-2 text-xl" />
-              <a
-                href="mailto:pearlbyyou@gmail.com"
-                className="text-pearl-dark no-underline hover:text-pearl-dark-hover transition-colors duration-200"
-              >
-                pearlbyyou@gmail.com
-              </a>
-            </div>
-            <h4 className="font-bold text-lg mt-0">Síguenos</h4>
-            <div className="flex gap-2 mt-2">
-              <Button
-                icon="pi pi-instagram"
-                rounded
-                text
-                severity="secondary"
-                onClick={() =>
-                  window.open("https:instagram.com/pearl_byyou", "_blank")
-                }
-                aria-label="Instagram"
-                size="large"
-              />
-              <Button
-                icon="pi pi-facebook"
-                rounded
-                text
-                severity="secondary"
-                onClick={() =>
-                  window.open("https://facebook.com/pearlbyyou", "_blank")
-                }
-                aria-label="Facebook"
-                size="large"
-              />
-              <Button
-                icon="pi pi-tiktok"
-                rounded
-                text
-                severity="secondary"
-                onClick={() =>
-                  window.open("https://www.tiktok.com/@pearl_byyou", "_blank")
-                }
-                aria-label="TikTok"
-                size="large"
-              />
+            </p>
+            <p className="m-0 mb-3 text-sm">
+              <a href="mailto:pearlbyyou@gmail.com" className="no-underline">pearlbyyou@gmail.com</a>
+            </p>
+            <div className="flex gap-2">
+              <Button icon="pi pi-instagram" rounded text severity="secondary" onClick={() => window.open("https://instagram.com/pearlbyou", "_blank")} aria-label="Instagram" />
+              <Button icon="pi pi-facebook" rounded text severity="secondary" onClick={() => window.open("https://facebook.com/pearlbyyou", "_blank")} aria-label="Facebook" />
+              <Button icon="pi pi-tiktok" rounded text severity="secondary" onClick={() => window.open("https://www.tiktok.com/@pearl_byou", "_blank")} aria-label="TikTok" />
             </div>
           </div>
         </div>
-      </div>
-      {/* Sección de Copyright y Autoría dinámica */}
-      <div className="text-center text-sm py-4">
-        <p className="m-0">{footerText}</p> {/* ✅ Usa el estado dinámico */}
-        <p className="m-0 mt-2">
-          Desarrollado por{" "}
-          <a
-            href="mailto:alejozd79@gmail.com"
-            className="text-pearl-dark no-underline font-bold"
-          >
-            Alejandro Zambrano
-          </a>
-        </p>
+
+        <div className="border-top-1 mt-4 pt-3 border-300 text-sm text-pearl-soft flex flex-column md:flex-row md:justify-content-between gap-2">
+          <p className="m-0">{footerText}</p>
+          <p className="m-0">Desarrollado por Alejandro Zambrano</p>
+        </div>
       </div>
     </footer>
   );

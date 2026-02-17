@@ -10,6 +10,7 @@ export default function WhatsAppButton({ productName }) {
       label="Quiero este bolso"
       icon="pi pi-whatsapp"
       severity="success"
+      className="whatsapp-pill"
       onClick={() => window.open(whatsappUrl, "_blank")}
       size="small"
       raised

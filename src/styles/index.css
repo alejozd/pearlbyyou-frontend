@@ -1,34 +1,106 @@
+:root {
+  --pearl-bg: #f6f2eb;
+  --pearl-surface: #fffcf8;
+  --pearl-surface-strong: #efe5d9;
+  --pearl-text: #4d3f37;
+  --pearl-text-soft: #7c6a60;
+  --pearl-primary: #8b5e3c;
+  --pearl-primary-hover: #6f4c32;
+  --pearl-accent: #cf9f74;
+  --pearl-border: #e7dbcf;
+  --pearl-shadow: 0 12px 30px rgba(91, 75, 66, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
-  /* Usar un degradado lineal sutil */
-  background: linear-gradient(to bottom, #f2f0eb, #ffffff);
-  /* Asegurar que el degradado cubra toda la altura de la página */
-  min-height: 100vh;
-  /* El color de fondo se muestra si el degradado no es compatible */
-  background-color: #f2f0eb;
+  margin: 0;
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  color: var(--pearl-text);
+  background: radial-gradient(circle at top, #fffdf9 0%, var(--pearl-bg) 55%, #f1e9dd 100%);
 }
 
-/* Definimos un color de marca para los títulos */
+a {
+  color: inherit;
+}
+
+.min-app {
+  min-height: calc(100vh - 180px);
+}
+
+.page-shell {
+  width: min(1200px, 92vw);
+  margin: 2rem auto 0;
+}
+
+.brand-gradient-text {
+  background: linear-gradient(120deg, var(--pearl-primary), #b98152);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.soft-card {
+  background: var(--pearl-surface);
+  border: 1px solid var(--pearl-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--pearl-shadow);
+}
+
 .text-pearl {
-  color: #5b4b42; /* Color café oscuro */
+  color: var(--pearl-text);
 }
 
-/* ... otros estilos ... */
+.text-pearl-soft {
+  color: var(--pearl-text-soft);
+}
+
+.transform-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 
 .transform-hover:hover {
-  transform: scale(1.05);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(91, 75, 66, 0.16);
 }
 
-.shadow-4:hover {
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+.whatsapp-pill {
+  border-radius: 999px;
 }
 
-.cursor-pointer {
-  cursor: pointer;
+/* PrimeReact refinements */
+.p-menubar {
+  border: 1px solid var(--pearl-border);
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(91, 75, 66, 0.08);
 }
 
-/* Responsive */
+.p-menubar .p-menuitem-link {
+  border-radius: 999px;
+}
+
+.p-card {
+  border-radius: 1.25rem;
+}
+
+.p-carousel .p-carousel-indicators .p-carousel-indicator button {
+  background-color: #d6c4b3;
+}
+
+.p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+  background-color: var(--pearl-primary);
+}
+
 @media (max-width: 768px) {
-  .text-5xl {
-    font-size: 2rem;
+  .page-shell {
+    width: 94vw;
+    margin-top: 1.25rem;
   }
 }

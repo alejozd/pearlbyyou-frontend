@@ -14,7 +14,6 @@ export default function AboutUs() {
 
   useEffect(() => {
     const fetchAboutUsContent = async () => {
-      setLoading(true);
       try {
         const response = await apiClient.get("/settings");
         setSettings({
@@ -30,11 +29,6 @@ export default function AboutUs() {
           summary: "Error",
           detail: 'No se pudo cargar el contenido de "Sobre Nosotros".',
         });
-        setSettings({
-          about_us_title: "Error al Cargar",
-          about_us_body:
-            "Lo sentimos, no pudimos cargar el contenido de esta sección en este momento.",
-        });
       } finally {
         setLoading(false);
       }
@@ -44,38 +38,19 @@ export default function AboutUs() {
   }, []);
 
   return (
-    // ✅ Contenedor principal para centrar la Card y darle un ancho máximo
-    <div
-      className="flex justify-content-center align-items-start p-4 mx-auto" // mx-auto para centrar horizontalmente
-      style={{ minHeight: "calc(100vh - 56px)" }} // Ajusta la altura mínima
-    >
+    <div className="page-shell">
       <Toast ref={toast} />
-      {/* ✅ La Card ahora tiene un ancho máximo para mejor lectura */}
-      <Card className="w-full lg:w-9 md:w-10 xl:w-8 shadow-2">
-        {" "}
-        {/* Más responsivo */}
+      <Card className="soft-card p-2 md:p-4">
         {loading ? (
-          <div className="flex justify-content-center py-5">
+          <div className="flex justify-content-center py-7">
             <ProgressSpinner />
           </div>
         ) : (
-          <>
-            {/* ✅ Usa un h1 para el título principal de la página */}
-            <h1 className="text-pearl text-5xl md:text-6xl font-bold mb-3 text-center">
-              {settings.about_us_title}
-            </h1>
-            <p className="text-pearl text-xl md:text-2xl mt-0 mb-5 text-center">
-              Descubre la historia detrás de Pearl by You.
-            </p>
-            <div className="grid justify-content-center">
-              <div className="col-12 md:col-10 lg:col-8">
-                {/* ✅ El párrafo del cuerpo principal */}
-                <p className="text-pearl line-height-3 text-lg text-justify">
-                  {settings.about_us_body}
-                </p>
-              </div>
-            </div>
-          </>
+          <div className="px-2 md:px-5 py-3 md:py-5">
+            <h1 className="text-4xl md:text-5xl font-bold mt-0 mb-3 text-center brand-gradient-text">{settings.about_us_title}</h1>
+            <p className="text-pearl-soft text-lg md:text-xl text-center mt-0 mb-5">Diseñamos accesorios que cuentan historias.</p>
+            <p className="text-pearl line-height-4 text-lg text-justify m-0">{settings.about_us_body}</p>
+          </div>
         )}
       </Card>
     </div>

@@ -10,7 +10,7 @@ export default function ProductCard({ product }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  if (!product || !product.imagenes || product.imagenes.length === 0) {
+  if (!product?.imagenes?.length) {
     return null;
   }
 
@@ -19,41 +19,24 @@ export default function ProductCard({ product }) {
     setIsModalVisible(true);
   };
 
-  const onHideModal = () => {
-    setIsModalVisible(false);
-    setSelectedImage(null);
-  };
-
   const itemTemplate = (item) => {
     const fullImageUrl = `${BASE_IMG_URL}${item.url}`;
     return (
       <img
         src={fullImageUrl}
         alt={product.nombre}
-        style={{ width: "100%", display: "block", cursor: "pointer" }}
+        style={{ width: "100%", display: "block", cursor: "zoom-in", aspectRatio: "4 / 5", objectFit: "cover" }}
         onClick={() => handleImageClick(fullImageUrl)}
       />
     );
   };
 
-  const thumbnailTemplate = (item) => {
-    const fullImageUrl = `${BASE_IMG_URL}${item.url}`;
-    return (
-      <img
-        src={fullImageUrl}
-        alt={product.nombre}
-        style={{ width: "100%", display: "block" }}
-      />
-    );
-  };
-
   const header = (
-    <div className="overflow-hidden border-round-top p-1">
+    <div className="overflow-hidden border-round-top">
       <Galleria
         value={product.imagenes}
         numVisible={4}
         item={itemTemplate}
-        thumbnail={thumbnailTemplate}
         showItemNavigators
         showThumbnails={false}
       />
@@ -61,63 +44,22 @@ export default function ProductCard({ product }) {
   );
 
   return (
-    <div className="p-2 flex flex-column">
-      <Card
-        header={header}
-        className="shadow-2 hover:shadow-4 transition-all duration-300 h-full flex flex-column surface-card"
-        style={{ height: "100%" }}
-      >
-        <div
-          className="p-card-body p-0 -m-3"
-          style={{ paddingTop: "0.25rem 0.5rem" }}
-        >
-          <div className="p-2 text-center ">
-            <h4
-              className="mt-0 mb-1 text-900 font-bold"
-              style={{ marginTop: "-0.5rem" }}
-            >
-              {product.nombre}
-            </h4>
-            <p className="mt-0 mb-2 text-xl text-900">
-              ${Number(product.precio).toLocaleString("es-CO")}
-            </p>
-            <p
-              className="text-600 line-height-3 text-sm overflow-hidden"
-              style={{
-                height: "60px",
-                // maxHeight: "60px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "-webkit-box",
-                WebkitLineClamp: "3",
-                WebkitBoxOrient: "vertical",
-              }}
-            >
-              {product.descripcion}
-            </p>
-          </div>
-          <div className="flex justify-content-center mt-3">
-            <WhatsAppButton productName={product.nombre} />
-          </div>
+    <div className="p-2 h-full">
+      <Card header={header} className="transform-hover h-full flex flex-column soft-card">
+        <div className="text-center px-2 pb-2">
+          <h3 className="mt-2 mb-1 font-semibold text-xl text-900">{product.nombre}</h3>
+          <p className="mt-0 mb-2 text-2xl font-medium" style={{ color: "#8b5e3c" }}>
+            ${Number(product.precio).toLocaleString("es-CO")}
+          </p>
+          <p className="text-600 line-height-3 text-sm mb-3" style={{ minHeight: "64px" }}>
+            {product.descripcion}
+          </p>
+          <WhatsAppButton productName={product.nombre} />
         </div>
       </Card>
 
-      {/* Componente Dialog con estilo responsive */}
-      <Dialog
-        header={product.nombre}
-        visible={isModalVisible}
-        // Usamos un ancho del 90% de la pantalla y un ancho máximo de 800px
-        style={{ width: "90vw", maxWidth: "800px" }}
-        onHide={onHideModal}
-        modal
-      >
-        {selectedImage && (
-          <img
-            src={selectedImage}
-            alt={product.nombre}
-            style={{ width: "100%", display: "block" }}
-          />
-        )}
+      <Dialog header={product.nombre} visible={isModalVisible} style={{ width: "90vw", maxWidth: "720px" }} onHide={() => setIsModalVisible(false)} modal>
+        {selectedImage && <img src={selectedImage} alt={product.nombre} style={{ width: "100%", display: "block" }} />}
       </Dialog>
     </div>
   );
