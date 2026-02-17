@@ -86,6 +86,25 @@ a {
   border-radius: 999px;
 }
 
+
+.p-menubar .p-menuitem-content,
+.p-menubar .p-menuitem-link {
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.p-menubar .p-menuitem-content:hover,
+.p-menubar .p-menuitem-content:has(.p-menuitem-link:focus-visible) {
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.p-menubar .p-menuitem-link:focus-visible {
+  outline: 2px solid #cf9f74;
+  outline-offset: 1px;
+  border-radius: 999px;
+}
+
 .p-card {
   border-radius: 1.25rem;
 }
