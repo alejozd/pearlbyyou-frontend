@@ -90,6 +90,17 @@ a {
   border-radius: 1.25rem;
 }
 
+.product-media,
+.product-media .p-galleria-item-wrapper,
+.product-media .p-galleria-item-container,
+.product-media .p-galleria-item {
+  border-radius: 1.25rem;
+}
+
+.product-media img {
+  border-radius: 1.25rem;
+}
+
 .p-carousel .p-carousel-indicators .p-carousel-indicator button {
   background-color: #d6c4b3;
 }

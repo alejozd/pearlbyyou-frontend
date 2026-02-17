@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
   };
 
   const header = (
-    <div className="overflow-hidden border-round-top">
+    <div className="overflow-hidden border-round-xl product-media">
       <Galleria
         value={product.imagenes}
         numVisible={4}
@@ -59,7 +59,13 @@ export default function ProductCard({ product }) {
       </Card>
 
       <Dialog header={product.nombre} visible={isModalVisible} style={{ width: "90vw", maxWidth: "720px" }} onHide={() => setIsModalVisible(false)} modal>
-        {selectedImage && <img src={selectedImage} alt={product.nombre} style={{ width: "100%", display: "block" }} />}
+        {selectedImage && (
+          <img
+            src={selectedImage}
+            alt={product.nombre}
+            style={{ width: "100%", display: "block", borderRadius: "1rem" }}
+          />
+        )}
       </Dialog>
     </div>
   );
