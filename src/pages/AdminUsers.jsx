@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -9,43 +9,46 @@ import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { FloatLabel } from "primereact/floatlabel";
-import apiClient from "../utils/axios";
 import { jwtDecode } from "jwt-decode";
+import apiClient from "../utils/axios";
+
+const roleOptions = [
+  { label: "Admin", value: "admin" },
+  { label: "Super Admin", value: "super_admin" },
+];
+
+const initialNewAdmin = {
+  email: "",
+  password: "",
+  confirmPassword: "",
+  role: "admin",
+};
 
 export default function AdminUsers() {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [displayDialog, setDisplayDialog] = useState(false);
-  // ✅ Añadir el estado para 'confirmPassword'
-  const [newAdmin, setNewAdmin] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "admin",
-  });
+  const [displayCreate, setDisplayCreate] = useState(false);
+  const [displayEdit, setDisplayEdit] = useState(false);
+  const [newAdmin, setNewAdmin] = useState(initialNewAdmin);
   const [editAdmin, setEditAdmin] = useState(null);
-  const [displayEditDialog, setDisplayEditDialog] = useState(false);
   const toast = useRef(null);
 
   const token = localStorage.getItem("authToken");
-  const decodedToken = token ? jwtDecode(token) : null;
-  const currentAdminId = decodedToken ? decodedToken.id : null;
+  const currentAdminId = useMemo(() => {
+    if (!token) return null;
+    try {
+      return jwtDecode(token)?.id;
+    } catch {
+      return null;
+    }
+  }, [token]);
 
-  const roleOptions = [
-    { label: "Admin", value: "admin" },
-    { label: "Super Admin", value: "super_admin" },
-  ];
-
-  const fetchAdmins = async () => {
+  const fetchAdmins = useCallback(async () => {
     setLoading(true);
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      const response = await apiClient.get("/admin-management", config);
-      setAdmins(response.data);
-    } catch (error) {
-      console.error("Error al obtener administradores:", error);
+      const response = await apiClient.get("/admin-management", { headers: { Authorization: `Bearer ${token}` } });
+      setAdmins(Array.isArray(response.data) ? response.data : []);
+    } catch {
       toast.current.show({
         severity: "error",
         summary: "Error",
@@ -54,93 +57,77 @@ export default function AdminUsers() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchAdmins();
-  }, []);
+  }, [fetchAdmins]);
 
   const handleCreate = async () => {
-    setLoading(true);
-    // ✅ Validar que las contraseñas coincidan
-    if (newAdmin.password !== newAdmin.confirmPassword) {
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "Las contraseñas no coinciden.",
-      });
-      setLoading(false);
+    if (!newAdmin.email || !newAdmin.password) {
+      toast.current.show({ severity: "warn", summary: "Campos requeridos", detail: "Completa correo y contraseña." });
       return;
     }
 
-    // ✅ Desestructurar los datos, excluyendo la contraseña de confirmación
-    const { confirmPassword: _, ...adminData } = newAdmin;
+    if (newAdmin.password !== newAdmin.confirmPassword) {
+      toast.current.show({ severity: "error", summary: "Error", detail: "Las contraseñas no coinciden." });
+      return;
+    }
 
+    setLoading(true);
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      // ✅ Enviar solo los datos necesarios al backend
-      await apiClient.post("/admin-management", adminData, config);
-      toast.current.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Administrador creado con éxito.",
-      });
-      fetchAdmins();
-      setDisplayDialog(false);
-      // ✅ Limpiar el estado, incluyendo 'confirmPassword'
-      setNewAdmin({
-        email: "",
-        password: "",
-        confirmPassword: "",
-        role: "admin",
-      });
+      const { confirmPassword, ...payload } = newAdmin;
+      void confirmPassword;
+      await apiClient.post("/admin-management", payload, { headers: { Authorization: `Bearer ${token}` } });
+      toast.current.show({ severity: "success", summary: "Éxito", detail: "Administrador creado." });
+      setDisplayCreate(false);
+      setNewAdmin(initialNewAdmin);
+      await fetchAdmins();
     } catch (error) {
-      console.error("Error al crear administrador:", error);
       toast.current.show({
         severity: "error",
         summary: "Error",
-        detail:
-          error.response?.data?.message || "Error al crear el administrador.",
+        detail: error.response?.data?.message || "No se pudo crear el administrador.",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  // ... (Funciones handleEdit, handleUpdate, confirmToggleStatus, toggleStatus, activeBodyTemplate y actionBodyTemplate sin cambios)
-  const handleEdit = (rowData) => {
-    setEditAdmin({ ...rowData });
-    setDisplayEditDialog(true);
-  };
-
   const handleUpdate = async () => {
+    if (!editAdmin?.id) return;
     setLoading(true);
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      await apiClient.put(
-        `/admin-management/${editAdmin.id}`,
-        editAdmin,
-        config
-      );
-      toast.current.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Administrador actualizado con éxito.",
-      });
-      fetchAdmins();
-      setDisplayEditDialog(false);
+      await apiClient.put(`/admin-management/${editAdmin.id}`, editAdmin, { headers: { Authorization: `Bearer ${token}` } });
+      toast.current.show({ severity: "success", summary: "Éxito", detail: "Administrador actualizado." });
+      setDisplayEdit(false);
+      await fetchAdmins();
     } catch (error) {
-      console.error("Error al actualizar administrador:", error);
       toast.current.show({
         severity: "error",
         summary: "Error",
-        detail:
-          error.response?.data?.message ||
-          "Error al actualizar el administrador.",
+        detail: error.response?.data?.message || "No se pudo actualizar el administrador.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleStatus = async (adminId, active) => {
+    setLoading(true);
+    try {
+      await apiClient.put(`/admin-management/${adminId}/status`, { is_active: !active }, { headers: { Authorization: `Bearer ${token}` } });
+      toast.current.show({
+        severity: "success",
+        summary: "Éxito",
+        detail: active ? "Administrador desactivado." : "Administrador activado.",
+      });
+      await fetchAdmins();
+    } catch (error) {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: error.response?.data?.message || "No se pudo actualizar el estado.",
       });
     } finally {
       setLoading(false);
@@ -149,251 +136,115 @@ export default function AdminUsers() {
 
   const confirmToggleStatus = (rowData) => {
     confirmDialog({
-      message: `¿Estás seguro de que quieres ${
-        rowData.is_active ? "desactivar" : "activar"
-      } a  ${rowData.nombre || rowData.email}?`,
-      header: "Confirmar",
+      message: `¿Deseas ${rowData.is_active ? "desactivar" : "activar"} a ${rowData.email}?`,
+      header: "Confirmar acción",
       icon: "pi pi-exclamation-triangle",
-      acceptLabel: "Sí",
-      rejectLabel: "No",
+      acceptLabel: "Confirmar",
+      rejectLabel: "Cancelar",
       acceptClassName: "p-button-success",
-      rejectClassName: "p-button-danger",
-      accept: () => toggleStatus(rowData),
+      rejectClassName: "p-button-text",
+      accept: () => toggleStatus(rowData.id, rowData.is_active),
     });
   };
 
-  const toggleStatus = async (rowData) => {
-    setLoading(true);
-    try {
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      await apiClient.patch(
-        `/admin-management/${rowData.id}/status`,
-        { is_active: !rowData.is_active },
-        config
-      );
-      toast.current.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: `Administrador ${
-          rowData.is_active ? "desactivado" : "activado"
-        } con éxito.`,
-      });
-      fetchAdmins();
-    } catch (error) {
-      console.error("Error al cambiar el estado:", error);
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: error.response?.data?.message || "Error al cambiar el estado.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const activeBody = (rowData) => (
+    <span className={`p-tag p-tag-${rowData.is_active ? "success" : "danger"}`}>
+      {rowData.is_active ? "Activo" : "Inactivo"}
+    </span>
+  );
 
-  const activeBodyTemplate = (rowData) => {
-    return (
-      <span
-        className={`p-tag p-tag-${rowData.is_active ? "success" : "danger"}`}
-      >
-        {rowData.is_active ? "Activo" : "Inactivo"}
-      </span>
-    );
-  };
+  const actionsBody = (rowData) => (
+    <div className="flex gap-2">
+      <Button icon="pi pi-pencil" rounded outlined tooltip="Editar" onClick={() => {
+        setEditAdmin({ id: rowData.id, email: rowData.email, role: rowData.role });
+        setDisplayEdit(true);
+      }} />
 
-  const actionBodyTemplate = (rowData) => {
-    console.log("Test");
-    return (
-      <div className="flex flex-wrap gap-2">
+      {rowData.id !== currentAdminId && (
         <Button
-          icon="pi pi-pencil"
+          icon={rowData.is_active ? "pi pi-lock" : "pi pi-lock-open"}
           rounded
-          severity="info"
-          onClick={() => handleEdit(rowData)}
-          tooltip="Editar"
-          tooltipOptions={{ position: "left" }}
+          severity={rowData.is_active ? "danger" : "success"}
+          tooltip={rowData.is_active ? "Desactivar" : "Activar"}
+          onClick={() => confirmToggleStatus(rowData)}
         />
-        {rowData.id !== currentAdminId && (
-          <Button
-            icon={rowData.is_active ? "pi pi-lock" : "pi pi-unlock"}
-            rounded
-            severity={rowData.is_active ? "danger" : "success"}
-            onClick={() => confirmToggleStatus(rowData)}
-            tooltip={rowData.is_active ? "Desactivar" : "Activar"}
-            tooltipOptions={{ position: "right" }}
-          />
-        )}
-      </div>
-    );
-  };
-
-  const createDialogFooter = (
-    <div>
-      <Button
-        label="Cancelar"
-        icon="pi pi-times"
-        onClick={() => setDisplayDialog(false)}
-        className="p-button-text"
-      />
-      <Button label="Guardar" icon="pi pi-check" onClick={handleCreate} />
+      )}
     </div>
   );
 
-  const editDialogFooter = (
-    <div>
-      <Button
-        label="Cancelar"
-        icon="pi pi-times"
-        onClick={() => setDisplayEditDialog(false)}
-        severity="danger"
-        text
-        raised
-        // className="p-button-text"
-      />
-      <Button
-        label="Guardar"
-        icon="pi pi-check"
-        onClick={handleUpdate}
-        severity="success"
-      />
+  const createFooter = (
+    <div className="flex gap-2 justify-content-end">
+      <Button label="Cancelar" text onClick={() => setDisplayCreate(false)} />
+      <Button label="Crear" icon="pi pi-check" onClick={handleCreate} loading={loading} />
+    </div>
+  );
+
+  const editFooter = (
+    <div className="flex gap-2 justify-content-end">
+      <Button label="Cancelar" text onClick={() => setDisplayEdit(false)} />
+      <Button label="Guardar" icon="pi pi-save" onClick={handleUpdate} loading={loading} />
     </div>
   );
 
   return (
-    <div className="card">
+    <section className="admin-page">
       <Toast ref={toast} />
       <ConfirmDialog />
-      <h2 className="mb-4">Gestión de Administradores</h2>
-      <Button
-        label="Crear Nuevo Administrador"
-        icon="pi pi-plus"
-        onClick={() => setDisplayDialog(true)}
-        className="mb-4"
-      />
 
-      <DataTable
-        value={admins}
-        loading={loading}
-        emptyMessage="No se encontraron administradores."
-        dataKey="id"
-        size="small"
-        paginator
-        rows={10}
-      >
-        <Column field="id" header="ID" />
-        <Column field="email" header="Correo Electrónico" />
-        <Column field="role" header="Rol" />
-        <Column field="is_active" header="Activo" body={activeBodyTemplate} />
-        <Column
-          body={actionBodyTemplate}
-          header="Acciones"
-          style={{ width: "120px" }}
-        />
-      </DataTable>
+      <div className="admin-page-header">
+        <div>
+          <p className="m-0 text-sm text-pearl-soft">Seguridad</p>
+          <h2 className="m-0 text-3xl">Administradores</h2>
+        </div>
+        <Button label="Nuevo administrador" icon="pi pi-plus" onClick={() => setDisplayCreate(true)} />
+      </div>
 
-      {/* ✅ Diálogo para crear un nuevo administrador */}
-      <Dialog
-        header="Crear Nuevo Administrador"
-        visible={displayDialog}
-        style={{ width: "50vw" }}
-        footer={createDialogFooter}
-        onHide={() => setDisplayDialog(false)}
-      >
-        <div className="p-fluid">
-          <div className="p-field mb-3">
-            <FloatLabel>
-              {" "}
-              {/* ✅ Usar FloatLabel */}
-              <InputText
-                id="email"
-                value={newAdmin.email}
-                onChange={(e) =>
-                  setNewAdmin({ ...newAdmin, email: e.target.value })
-                }
-              />
-              <label htmlFor="email">Correo Electrónico</label>
-            </FloatLabel>
-          </div>
-          <div className="p-field mb-3">
-            <FloatLabel>
-              {" "}
-              {/* ✅ Usar FloatLabel */}
-              <Password
-                id="password"
-                value={newAdmin.password}
-                onChange={(e) =>
-                  setNewAdmin({ ...newAdmin, password: e.target.value })
-                }
-                toggleMask // ✅ Añadir el botón para mostrar/ocultar la contraseña
-              />
-              <label htmlFor="password">Contraseña</label>
-            </FloatLabel>
-          </div>
-          <div className="p-field mb-3">
-            {" "}
-            {/* ✅ Campo de confirmar contraseña */}
-            <FloatLabel>
-              <Password
-                id="confirmPassword"
-                value={newAdmin.confirmPassword}
-                onChange={(e) =>
-                  setNewAdmin({ ...newAdmin, confirmPassword: e.target.value })
-                }
-                toggleMask
-              />
-              <label htmlFor="confirmPassword">Confirmar Contraseña</label>
-            </FloatLabel>
-          </div>
-          <div className="p-field">
-            <FloatLabel>
-              <Dropdown
-                id="new-role"
-                value={newAdmin.role}
-                options={roleOptions}
-                onChange={(e) => setNewAdmin({ ...newAdmin, role: e.value })}
-              />
-              <label htmlFor="new-role">Rol</label>
-            </FloatLabel>
-          </div>
+      <div className="soft-card p-3">
+        <DataTable value={admins} loading={loading} dataKey="id" paginator rows={8} emptyMessage="No se encontraron administradores." className="admin-table">
+          <Column field="email" header="Correo" sortable />
+          <Column field="role" header="Rol" sortable />
+          <Column field="is_active" header="Estado" body={activeBody} />
+          <Column header="Acciones" body={actionsBody} style={{ width: "10rem" }} />
+        </DataTable>
+      </div>
+
+      <Dialog header="Crear administrador" visible={displayCreate} style={{ width: "min(95vw, 560px)" }} footer={createFooter} onHide={() => setDisplayCreate(false)}>
+        <div className="p-fluid flex flex-column gap-4 mt-2">
+          <FloatLabel>
+            <InputText id="new-email" value={newAdmin.email} onChange={(e) => setNewAdmin((prev) => ({ ...prev, email: e.target.value }))} />
+            <label htmlFor="new-email">Correo</label>
+          </FloatLabel>
+
+          <FloatLabel>
+            <Password id="new-password" value={newAdmin.password} onChange={(e) => setNewAdmin((prev) => ({ ...prev, password: e.target.value }))} feedback={false} toggleMask />
+            <label htmlFor="new-password">Contraseña</label>
+          </FloatLabel>
+
+          <FloatLabel>
+            <Password id="new-confirm-password" value={newAdmin.confirmPassword} onChange={(e) => setNewAdmin((prev) => ({ ...prev, confirmPassword: e.target.value }))} feedback={false} toggleMask />
+            <label htmlFor="new-confirm-password">Confirmar contraseña</label>
+          </FloatLabel>
+
+          <FloatLabel>
+            <Dropdown id="new-role" value={newAdmin.role} options={roleOptions} onChange={(e) => setNewAdmin((prev) => ({ ...prev, role: e.value }))} />
+            <label htmlFor="new-role">Rol</label>
+          </FloatLabel>
         </div>
       </Dialog>
 
-      {/* ✅ Diálogo para editar un administrador existente (sin cambios aquí) */}
-      <Dialog
-        header="Editar Administrador"
-        visible={displayEditDialog}
-        style={{ width: "50vw" }}
-        footer={editDialogFooter}
-        onHide={() => setDisplayEditDialog(false)}
-      >
-        <div className="p-fluid">
-          <div className="p-field mb-4">
-            <FloatLabel>
-              <InputText
-                id="edit-email"
-                value={editAdmin?.email || ""}
-                onChange={(e) =>
-                  setEditAdmin({ ...editAdmin, email: e.target.value })
-                }
-              />
-              <label htmlFor="edit-email">Correo Electrónico</label>
-            </FloatLabel>
-          </div>
-          <div className="p-field">
-            <FloatLabel>
-              <Dropdown
-                id="edit-role"
-                value={editAdmin?.role || ""}
-                options={roleOptions}
-                onChange={(e) => setEditAdmin({ ...editAdmin, role: e.value })}
-              />
-              <label htmlFor="edit-role">Rol</label>
-            </FloatLabel>
-          </div>
+      <Dialog header="Editar administrador" visible={displayEdit} style={{ width: "min(95vw, 520px)" }} footer={editFooter} onHide={() => setDisplayEdit(false)}>
+        <div className="p-fluid flex flex-column gap-4 mt-2">
+          <FloatLabel>
+            <InputText id="edit-email" value={editAdmin?.email || ""} onChange={(e) => setEditAdmin((prev) => ({ ...prev, email: e.target.value }))} />
+            <label htmlFor="edit-email">Correo</label>
+          </FloatLabel>
+
+          <FloatLabel>
+            <Dropdown id="edit-role" value={editAdmin?.role || ""} options={roleOptions} onChange={(e) => setEditAdmin((prev) => ({ ...prev, role: e.value }))} />
+            <label htmlFor="edit-role">Rol</label>
+          </FloatLabel>
         </div>
       </Dialog>
-    </div>
+    </section>
   );
 }
