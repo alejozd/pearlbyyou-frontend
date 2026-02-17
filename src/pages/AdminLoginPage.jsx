@@ -1,116 +1,107 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { Message } from "primereact/message";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Toast } from "primereact/toast";
-import { useRef } from "react";
 import { Password } from "primereact/password";
 import { FloatLabel } from "primereact/floatlabel";
-import { ProgressSpinner } from "primereact/progressspinner";
+import { Divider } from "primereact/divider";
+import { useNavigate } from "react-router-dom";
+import apiClient from "../utils/axios";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleLogin = async (event) => {
+    event.preventDefault();
 
-    try {
-      console.log("Intentando iniciar sesión con:", { email, password });
-      // ✅ Asegúrate de que esta URL sea la correcta para tu backend
-      const response = await axios.post("/api/v1/auth/login", {
-        email,
-        password,
+    if (!email || !password) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Campos requeridos",
+        detail: "Ingresa correo y contraseña para continuar.",
       });
-      // console.log("Respuesta del servidor:", response.data);
+      return;
+    }
 
-      if (response.data.token) {
-        // ✅ Login exitoso: guarda el token en el almacenamiento local
-        localStorage.setItem("authToken", response.data.token);
-        toast.current.show({
-          severity: "success",
-          summary: "Login Exitoso",
-          detail: "Redirigiendo...",
-          life: 1500,
-        });
-        setLoading(false);
-        // ✅ Redirige al panel de administración
-        setTimeout(() => {
-          navigate("/admin");
-        }, 1500);
-      } else {
-        setLoading(false);
-        toast.current.show({
-          severity: "error",
-          summary: "Error",
-          detail: "No se recibió token. Intenta de nuevo.",
-        });
+    setLoading(true);
+    try {
+      const response = await apiClient.post("/auth/login", { email, password });
+
+      if (!response.data?.token) {
+        throw new Error("Token no recibido");
       }
-    } catch (err) {
-      setLoading(false);
-      console.error("Error de login:", err);
+
+      localStorage.setItem("authToken", response.data.token);
+      toast.current.show({
+        severity: "success",
+        summary: "Bienvenido",
+        detail: "Ingreso exitoso. Redirigiendo al panel...",
+        life: 1200,
+      });
+
+      setTimeout(() => navigate("/admin"), 1000);
+    } catch (error) {
       toast.current.show({
         severity: "error",
-        summary: "Login Fallido",
-        detail: err.response?.data?.message || "Credenciales incorrectas.",
+        summary: "No se pudo iniciar sesión",
+        detail: error.response?.data?.message || "Verifica tus credenciales.",
       });
-      console.log("Detalles del error:", err.response);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      className="flex justify-content-center align-items-center"
-      style={{ minHeight: "calc(100vh - 56px)" }}
-    >
+    <div className="admin-login-page">
       <Toast ref={toast} />
-      <Card
-        title="Acceso de Administrador"
-        className="w-full md:w-25rem relative"
-      >
-        <form onSubmit={handleLogin} className="flex flex-column gap-4 p-fluid">
+      <Card className="admin-login-card soft-card">
+        <div className="admin-login-top">
+          <span className="admin-login-chip">Área protegida</span>
+          <h1 className="m-0 text-3xl brand-gradient-text">Admin Pearl by You</h1>
+          <p className="m-0 text-pearl-soft">Gestiona productos, contenido y usuarios desde un solo lugar.</p>
+        </div>
+
+        <Divider className="my-3" />
+
+        <form onSubmit={handleLogin} className="p-fluid flex flex-column gap-4">
           <FloatLabel>
             <InputText
-              id="email"
+              id="admin-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
+              autoComplete="username"
             />
-            <label htmlFor="email">Correo Electrónico</label>
+            <label htmlFor="admin-email">Correo electrónico</label>
           </FloatLabel>
+
           <FloatLabel>
             <Password
-              id="password"
-              type="password"
+              id="admin-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full"
               feedback={false}
               toggleMask
               disabled={loading}
+              inputClassName="w-full"
+              autoComplete="current-password"
             />
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="admin-password">Contraseña</label>
           </FloatLabel>
+
           <Button
             type="submit"
-            label="Iniciar Sesión"
-            className="w-full mt-3"
+            label="Ingresar al panel"
+            icon="pi pi-lock-open"
             loading={loading}
+            className="whatsapp-pill"
           />
         </form>
-        {/* ✅ Overlay condicional para mostrar el spinner */}
-        {loading && (
-          <div className="absolute top-0 left-0 w-full h-full flex justify-content-center align-items-center bg-white-alpha-50">
-            <ProgressSpinner />
-          </div>
-        )}
       </Card>
     </div>
   );

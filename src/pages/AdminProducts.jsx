@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -14,26 +14,24 @@ export default function AdminProducts() {
   const navigate = useNavigate();
   const toast = useRef(null);
 
+  const authConfig = () => ({
+    headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+  });
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("authToken");
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      // ✅ Rutas corregidas
       const endpoint = showInactive ? "/productos/inactivos" : "/productos";
-      const response = await apiClient.get(endpoint, config);
-      setProducts(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error al obtener los productos:", error);
-      setLoading(false);
+      const response = await apiClient.get(endpoint, authConfig());
+      setProducts(Array.isArray(response.data) ? response.data : []);
+    } catch {
       toast.current.show({
         severity: "error",
         summary: "Error",
         detail: "No se pudieron cargar los productos.",
       });
+    } finally {
+      setLoading(false);
     }
   }, [showInactive]);
 
@@ -41,181 +39,103 @@ export default function AdminProducts() {
     fetchProducts();
   }, [fetchProducts]);
 
-  const handleCreate = () => {
-    navigate("/admin/productos/nuevo");
-  };
-
-  const handleEdit = (productId) => {
-    navigate(`/admin/productos/editar/${productId}`);
-  };
-
-  const handleDeactivate = async (productId) => {
+  const toggleProductStatus = async (productId, activate) => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("authToken");
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      // ✅ Ruta corregida
-      await apiClient.put(`/productos/${productId}/desactivar`, {}, config);
+      const endpoint = activate
+        ? `/productos/${productId}/activar`
+        : `/productos/${productId}/desactivar`;
+      await apiClient.put(endpoint, {}, authConfig());
       toast.current.show({
         severity: "success",
         summary: "Éxito",
-        detail: "Producto desactivado con éxito.",
+        detail: activate ? "Producto activado." : "Producto desactivado.",
       });
-      fetchProducts();
+      await fetchProducts();
     } catch (error) {
-      console.error("Error al desactivar el producto:", error);
       toast.current.show({
         severity: "error",
         summary: "Error",
-        detail:
-          error.response?.data?.message || "Error al desactivar el producto.",
+        detail: error.response?.data?.message || "No se pudo actualizar el estado.",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleActivate = async (productId) => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("authToken");
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      // ✅ Ruta corregida
-      await apiClient.put(`/productos/${productId}/activar`, {}, config);
-      toast.current.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Producto activado con éxito.",
-      });
-      fetchProducts();
-    } catch (error) {
-      console.error("Error al activar el producto:", error);
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail:
-          error.response?.data?.message || "Error al activar el producto.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const confirmDeactivate = (rowData) => {
+  const confirmToggle = (rowData) => {
+    const willActivate = showInactive;
     confirmDialog({
-      message: `¿Estás seguro de que quieres desactivar el producto "${rowData.nombre}"?`,
-      header: "Confirmación",
+      message: `¿Deseas ${willActivate ? "activar" : "desactivar"} “${rowData.nombre}”?`,
+      header: "Confirmar acción",
       icon: "pi pi-exclamation-triangle",
-      acceptLabel: "Sí",
-      rejectLabel: "No",
+      acceptLabel: "Confirmar",
+      rejectLabel: "Cancelar",
       acceptClassName: "p-button-success",
-      rejectClassName: "p-button-danger",
-      accept: () => handleDeactivate(rowData.id),
+      rejectClassName: "p-button-text",
+      accept: () => toggleProductStatus(rowData.id, willActivate),
     });
   };
 
-  const confirmActivate = (rowData) => {
-    confirmDialog({
-      message: `¿Estás seguro de que quieres activar el producto "${rowData.nombre}"?`,
-      header: "Confirmación",
-      icon: "pi pi-check",
-      acceptLabel: "Sí",
-      rejectLabel: "No",
-      acceptClassName: "p-button-success",
-      rejectClassName: "p-button-danger",
-      accept: () => handleActivate(rowData.id),
-    });
-  };
-
-  const actionBodyTemplate = (rowData) => {
-    return (
-      <div className="flex gap-2">
-        <Button
-          icon="pi pi-pencil"
-          severity="help"
-          rounded
-          onClick={() => handleEdit(rowData.id)}
-          tooltip="Editar"
-          tooltipOptions={{ position: "left" }}
-        />
-        {showInactive ? (
-          <Button
-            icon="pi pi-check"
-            severity="success"
-            rounded
-            onClick={() => confirmActivate(rowData)}
-            tooltip="Activar"
-            tooltipOptions={{ position: "right" }}
-          />
-        ) : (
-          <Button
-            icon="pi pi-times"
-            severity="danger"
-            rounded
-            onClick={() => confirmDeactivate(rowData)}
-            tooltip="Desactivar"
-            tooltipOptions={{ position: "right" }}
-          />
-        )}
-      </div>
-    );
-  };
-
-  const priceBodyTemplate = (rowData) => {
-    return new Intl.NumberFormat("es-CO", {
-      style: "currency",
-      currency: "COP",
-    }).format(rowData.precio);
-  };
-
-  return (
-    <div className="card">
-      <Toast ref={toast} />
-      <ConfirmDialog />
-      <h2 className="mb-4">Gestión de Productos</h2>
-      <div className="flex justify-content-between mb-4">
-        <Button
-          label="Crear Nuevo Producto"
-          icon="pi pi-plus"
-          onClick={handleCreate}
-        />
-        <Button
-          label={
-            showInactive
-              ? "Ver Productos Activos"
-              : "Ver Productos Desactivados"
-          }
-          icon={showInactive ? "pi pi-eye" : "pi pi-eye-slash"}
-          className="p-button-secondary"
-          onClick={() => setShowInactive(!showInactive)}
-        />
-      </div>
-      <DataTable
-        value={products}
-        loading={loading}
-        emptyMessage="No se encontraron productos."
-        dataKey="id"
-        size="small"
-        paginator
-        rows={5}
-        rowsPerPageOptions={[5, 10, 15, 20, 25, 50]}
-        paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
-        currentPageReportTemplate="{first} a {last} de {totalRecords}"
-      >
-        <Column field="id" header="ID" hidden />
-        <Column field="nombre" header="Nombre" sortable />
-        <Column
-          field="precio"
-          header="Precio"
-          sortable
-          body={priceBodyTemplate}
-        />
-        <Column header="Acciones" body={actionBodyTemplate} />
-      </DataTable>
+  const actionBody = (rowData) => (
+    <div className="flex gap-2">
+      <Button icon="pi pi-pencil" rounded outlined tooltip="Editar" onClick={() => navigate(`/admin/productos/editar/${rowData.id}`)} />
+      <Button
+        icon={showInactive ? "pi pi-check" : "pi pi-times"}
+        rounded
+        severity={showInactive ? "success" : "danger"}
+        tooltip={showInactive ? "Activar" : "Desactivar"}
+        onClick={() => confirmToggle(rowData)}
+      />
     </div>
   );
+
+  const priceBody = (rowData) =>
+    new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP" }).format(rowData.precio);
+
+  return (
+    <section className="admin-page">
+      <Toast ref={toast} />
+      <ConfirmDialog />
+
+      <div className="admin-page-header">
+        <div>
+          <p className="m-0 text-sm text-pearl-soft">Inventario</p>
+          <h2 className="m-0 text-3xl">Gestión de productos</h2>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          <Button label="Nuevo producto" icon="pi pi-plus" onClick={() => navigate("/admin/productos/nuevo")} />
+          <Button
+            outlined
+            label={showInactive ? "Ver activos" : "Ver desactivados"}
+            icon={showInactive ? "pi pi-eye" : "pi pi-eye-slash"}
+            onClick={() => setShowInactive((prev) => !prev)}
+          />
+        </div>
+      </div>
+
+      <CardlessTable>
+        <DataTable
+          value={products}
+          loading={loading}
+          dataKey="id"
+          emptyMessage="No se encontraron productos."
+          paginator
+          rows={8}
+          rowsPerPageOptions={[8, 12, 20]}
+          currentPageReportTemplate="{first} - {last} de {totalRecords}"
+          paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
+          className="admin-table"
+        >
+          <Column field="nombre" header="Nombre" sortable />
+          <Column field="precio" header="Precio" body={priceBody} sortable />
+          <Column header="Acciones" body={actionBody} style={{ width: "10rem" }} />
+        </DataTable>
+      </CardlessTable>
+    </section>
+  );
+}
+
+function CardlessTable({ children }) {
+  return <div className="soft-card p-3">{children}</div>;
 }

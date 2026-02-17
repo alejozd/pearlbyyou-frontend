@@ -13,77 +13,47 @@ export default function Catalogo() {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      // Usa apiClient para todas las llamadas a la API de productos
       const response = await apiClient.get("/productos");
-
-      //FIX CLAVE: Verificar si la respuesta es un array antes de establecer el estado
-      const data = response.data;
-      if (Array.isArray(data)) {
-        setProducts(data); // Solo actualiza si es una lista (array)
-      } else {
-        // Si no es un array (por ejemplo, es {error: "..."} o null),
-        // establece una lista vacía para evitar que el .map() colapse la aplicación.
-        setProducts([]);
-        console.error(
-          "La API de productos no devolvió un array. Se recibió:",
-          data
-        );
-      }
-
-      setLoading(false);
+      setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error al obtener los productos:", error);
-      setLoading(false);
       toast.current.show({
         severity: "error",
         summary: "Error",
         detail: "No se pudieron cargar los productos.",
       });
+    } finally {
+      setLoading(false);
     }
-  }, []); // Dependencia de useCallback
+  }, []);
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
-  // Creación de un array para los esqueletos
-  // const skeletonProducts = Array(3).fill({});
-
-  // Plantilla para los esqueletos
-  const productSkeleton = () => {
-    return (
-      <div className="p-2">
-        <Card className="shadow-2 h-full flex flex-column surface-card">
-          <Skeleton height="15rem" className="mb-2"></Skeleton>
-          <div className="p-2 text-center">
-            <Skeleton width="10rem" height="1.5rem" className="mb-2"></Skeleton>
-            <Skeleton width="5rem" height="1rem"></Skeleton>
-            <Skeleton height="3rem" className="mt-2"></Skeleton>
-            <div className="flex justify-content-center mt-3">
-              <Skeleton width="10rem" height="2.5rem"></Skeleton>
-            </div>
-          </div>
-        </Card>
-      </div>
-    );
-  };
+  const productSkeleton = () => (
+    <div className="p-2">
+      <Card className="soft-card h-full flex flex-column">
+        <Skeleton height="15rem" className="mb-2" />
+        <div className="p-2 text-center">
+          <Skeleton width="10rem" height="1.5rem" className="mb-2" />
+          <Skeleton width="5rem" height="1rem" />
+          <Skeleton height="3rem" className="mt-2" />
+        </div>
+      </Card>
+    </div>
+  );
 
   return (
-    <div className="py-0">
-      <div className="text-center mb-4">
-        <h2 className="text-900 text-4xl font-bold mb-2">Nuestros Bolsos</h2>
-        <p className="text-600 text-lg mt-0">
-          Diseños únicos, hechos a mano con amor y estilo.
-        </p>
-      </div>
-      {loading ? (
-        <ProductCarousel
-          products={Array(3).fill({})}
-          itemTemplate={productSkeleton}
-        />
-      ) : (
-        <ProductCarousel products={products} />
-      )}
+    <div className="page-shell">
+      <Toast ref={toast} />
+      <section className="text-center mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-2 mt-0 brand-gradient-text">Nuestros Bolsos</h1>
+        <p className="text-pearl-soft text-lg mt-0">Diseños únicos con carácter artesanal y esencia moderna.</p>
+      </section>
+      <section className="soft-card p-3 md:p-4">
+        {loading ? <ProductCarousel products={Array(3).fill({})} itemTemplate={productSkeleton} /> : <ProductCarousel products={products} />}
+      </section>
     </div>
   );
 }

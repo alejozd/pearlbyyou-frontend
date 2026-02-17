@@ -6,45 +6,51 @@ import { useNavigate } from "react-router-dom";
 export default function AdminDashboard() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Elimina el token del localStorage
-    localStorage.removeItem("authToken");
-    // Redirige al usuario a la página de login
-    navigate("/admin/login");
-  };
+  const quickActions = [
+    {
+      title: "Productos",
+      description: "Crea, edita o desactiva bolsos del catálogo.",
+      icon: "pi pi-box",
+      action: () => navigate("/admin/productos"),
+      cta: "Gestionar productos",
+    },
+    {
+      title: "Contenido del sitio",
+      description: "Actualiza textos de Sobre Nosotros y Footer.",
+      icon: "pi pi-file-edit",
+      action: () => navigate("/admin/settings"),
+      cta: "Editar contenido",
+    },
+    {
+      title: "Usuarios admin",
+      description: "Administra accesos y roles del panel.",
+      icon: "pi pi-users",
+      action: () => navigate("/admin/usuarios"),
+      cta: "Ver usuarios",
+    },
+  ];
 
   return (
-    <div className="flex flex-column align-items-center justify-content-center m-5">
-      <Card
-        title="Panel de Administración"
-        className="w-full md:w-30rem text-center"
-      >
-        <p className="m-0 mb-4">¡Bienvenid@ al Panel de Administración!</p>
+    <section className="admin-page">
+      <div className="mb-4">
+        <p className="m-0 text-sm text-pearl-soft">Resumen</p>
+        <h2 className="m-0 text-3xl">Panel de administración</h2>
+      </div>
 
-        <div className="flex flex-column gap-3">
-          <Button
-            label="Gestionar Productos"
-            icon="pi pi-box"
-            severity="primary"
-            onClick={() => navigate("/admin/productos")}
-          />
-          {/* Aquí podrías agregar más botones para otras secciones */}
-          <Button
-            label="Gestionar Pedidos"
-            icon="pi pi-shopping-cart"
-            severity="secondary"
-            disabled
-          />
-        </div>
-      </Card>
-
-      <Button
-        label="Cerrar Sesión"
-        icon="pi pi-sign-out"
-        severity="danger"
-        className="mt-5"
-        onClick={handleLogout}
-      />
-    </div>
+      <div className="grid">
+        {quickActions.map((item) => (
+          <div className="col-12 md:col-6 xl:col-4" key={item.title}>
+            <Card className="soft-card h-full">
+              <div className="flex flex-column gap-3">
+                <i className={`${item.icon} text-2xl`} style={{ color: "#8b5e3c" }} />
+                <h3 className="m-0 text-xl">{item.title}</h3>
+                <p className="m-0 text-pearl-soft line-height-3">{item.description}</p>
+                <Button label={item.cta} outlined onClick={item.action} />
+              </div>
+            </Card>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
