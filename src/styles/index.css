@@ -203,8 +203,27 @@ a {
   align-items: center;
   justify-content: center;
   padding: 1.25rem;
+  background: radial-gradient(circle at 20% 10%, #fffaf3 0%, #f5eee4 46%, #efe3d4 100%);
 }
 
 .admin-login-card {
-  width: min(100%, 430px);
+  width: min(100%, 470px);
+  border-radius: 1.5rem;
+}
+
+.admin-login-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.admin-login-chip {
+  display: inline-flex;
+  width: fit-content;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  color: #7c6a60;
+  background: #f8eee3;
+  border: 1px solid #ead9c8;
 }

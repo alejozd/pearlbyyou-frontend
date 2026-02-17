@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Password } from "primereact/password";
 import { FloatLabel } from "primereact/floatlabel";
+import { Divider } from "primereact/divider";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../utils/axios";
 
@@ -59,14 +60,23 @@ export default function AdminLoginPage() {
     <div className="admin-login-page">
       <Toast ref={toast} />
       <Card className="admin-login-card soft-card">
-        <div className="text-center mb-4">
-          <p className="m-0 text-sm text-pearl-soft">Acceso privado</p>
+        <div className="admin-login-top">
+          <span className="admin-login-chip">Área protegida</span>
           <h1 className="m-0 text-3xl brand-gradient-text">Admin Pearl by You</h1>
+          <p className="m-0 text-pearl-soft">Gestiona productos, contenido y usuarios desde un solo lugar.</p>
         </div>
+
+        <Divider className="my-3" />
 
         <form onSubmit={handleLogin} className="p-fluid flex flex-column gap-4">
           <FloatLabel>
-            <InputText id="admin-email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} />
+            <InputText
+              id="admin-email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              autoComplete="username"
+            />
             <label htmlFor="admin-email">Correo electrónico</label>
           </FloatLabel>
 
@@ -78,11 +88,19 @@ export default function AdminLoginPage() {
               feedback={false}
               toggleMask
               disabled={loading}
+              inputClassName="w-full"
+              autoComplete="current-password"
             />
             <label htmlFor="admin-password">Contraseña</label>
           </FloatLabel>
 
-          <Button type="submit" label="Ingresar" icon="pi pi-lock-open" loading={loading} />
+          <Button
+            type="submit"
+            label="Ingresar al panel"
+            icon="pi pi-lock-open"
+            loading={loading}
+            className="whatsapp-pill"
+          />
         </form>
       </Card>
     </div>
