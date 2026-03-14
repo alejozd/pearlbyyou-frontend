@@ -73,6 +73,10 @@ a {
 
 .whatsapp-pill {
   border-radius: 999px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* PrimeReact refinements */
@@ -84,6 +88,7 @@ a {
 
 .p-menubar .p-menuitem-link {
   border-radius: 999px;
+  min-height: 44px;
 }
 
 
@@ -132,6 +137,21 @@ a {
   .page-shell {
     width: 94vw;
     margin-top: 1.25rem;
+  }
+
+  /* Asegurar que los botones en móvil tengan un tamaño mínimo táctil */
+  .p-button {
+    min-height: 44px;
+  }
+
+  /* Mejorar espaciado en grillas móviles */
+  .grid {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+
+  .col-12, .col-6 {
+    padding: 0.5rem;
   }
 }
 

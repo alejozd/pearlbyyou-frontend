@@ -16,40 +16,43 @@ export default function NavBar() {
   const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=Hola!%20Estoy%20interesado%20en%20tus%20bolsos.`;
 
   const start = (
-    <Link to="/" className="flex align-items-center gap-2 no-underline">
-      <img src={logo} alt="Pearl by You" className="h-3rem w-auto" />
-      <span className="font-semibold text-sm hidden md:block">Pearl by You</span>
+    <Link to="/" className="flex align-items-center gap-2 no-underline pr-2">
+      <img src={logo} alt="Pearl by You" className="h-2rem md:h-3rem w-auto" />
+      <span className="font-semibold text-sm hidden sm:block">Pearl by You</span>
     </Link>
   );
 
   const end = (
-    <div className="flex align-items-center gap-2">
+    <div className="flex align-items-center gap-1 sm:gap-2">
       <Tooltip target=".social-btn" position="bottom" />
+      {/* Ocultamos botones sociales individuales en pantallas muy pequeñas para evitar saturar el navbar */}
+      <div className="hidden sm:flex gap-1">
+        <Button
+          icon="pi pi-instagram"
+          rounded
+          text
+          severity="secondary"
+          onClick={() => window.open("https://instagram.com/pearlbyou", "_blank")}
+          aria-label="Instagram"
+          className="social-btn p-button-sm"
+          data-pr-tooltip="Instagram"
+        />
+        <Button
+          icon="pi pi-tiktok"
+          rounded
+          text
+          severity="secondary"
+          onClick={() => window.open("https://www.tiktok.com/@pearl_byou", "_blank")}
+          aria-label="TikTok"
+          className="social-btn p-button-sm"
+          data-pr-tooltip="TikTok"
+        />
+      </div>
       <Button
-        icon="pi pi-instagram"
-        rounded
-        text
-        severity="secondary"
-        onClick={() => window.open("https://instagram.com/pearlbyou", "_blank")}
-        aria-label="Instagram"
-        className="social-btn"
-        data-pr-tooltip="Instagram"
-      />
-      <Button
-        icon="pi pi-tiktok"
-        rounded
-        text
-        severity="secondary"
-        onClick={() => window.open("https://www.tiktok.com/@pearl_byou", "_blank")}
-        aria-label="TikTok"
-        className="social-btn"
-        data-pr-tooltip="TikTok"
-      />
-      <Button
-        label="WhatsApp"
+        label="Chat"
         icon="pi pi-whatsapp"
         size="small"
-        className="whatsapp-pill"
+        className="whatsapp-pill p-button-sm sm:p-button-normal"
         onClick={() => window.open(whatsappUrl, "_blank")}
       />
     </div>
@@ -71,7 +74,7 @@ export default function NavBar() {
         }))}
         start={start}
         end={end}
-        className="py-2 px-3"
+        className="py-1 px-2 sm:py-2 sm:px-3"
         style={{ backgroundColor: "#f4ece2" }}
       />
     </div>

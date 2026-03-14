@@ -198,9 +198,9 @@ export default function AdminProductForm() {
             />
           </div>
 
-          <div className="flex justify-content-end gap-2">
-            <Button type="button" label="Cancelar" severity="secondary" outlined onClick={() => navigate("/admin/productos")} />
-            <Button type="submit" label="Guardar" icon="pi pi-save" loading={loading} />
+          <div className="flex flex-column sm:flex-row justify-content-end gap-2 mt-4">
+            <Button type="button" label="Cancelar" severity="secondary" outlined onClick={() => navigate("/admin/productos")} className="p-button-lg sm:p-button-normal" />
+            <Button type="submit" label="Guardar" icon="pi pi-save" loading={loading} className="p-button-lg sm:p-button-normal" />
           </div>
         </form>
 
