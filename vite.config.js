@@ -25,6 +25,10 @@ export default defineConfig(({ mode }) => {
           manualChunks(id) {
             if (id.includes("node_modules")) {
               if (id.includes("primereact")) {
+                // Separa componentes comunes de PrimeReact para mejor cacheo
+                if (id.includes("primereact/menubar") || id.includes("primereact/button")) {
+                  return "primereact-core";
+                }
                 return "primereact-vendor";
               }
               return "vendor";

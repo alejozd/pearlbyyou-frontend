@@ -5,8 +5,8 @@ import ProductCard from "./ProductCard";
 export default function ProductCarousel({ products, itemTemplate }) {
   const responsiveOptions = [
     { breakpoint: "1200px", numVisible: 3, numScroll: 1 },
-    { breakpoint: "900px", numVisible: 2, numScroll: 1 },
-    { breakpoint: "600px", numVisible: 1, numScroll: 1 },
+    { breakpoint: "992px", numVisible: 2, numScroll: 1 },
+    { breakpoint: "576px", numVisible: 1, numScroll: 1 },
   ];
 
   return (

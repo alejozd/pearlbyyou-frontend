@@ -6,12 +6,12 @@ import PublicLayout from "./layouts/PublicLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Importa las páginas públicas de forma normal (se necesitan de inmediato)
-import Home from "./pages/Home";
-import AboutUs from "./pages/AboutUs";
-import Catalogo from "./pages/Catalogo";
+// ✅ Importa todas las páginas de forma perezosa para optimizar carga inicial en móviles
+const Home = lazy(() => import("./pages/Home"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
+const Catalogo = lazy(() => import("./pages/Catalogo"));
 
-// ✅ Importa las páginas de administración de forma perezosa
+// Páginas de administración
 const AdminLoginPage = lazy(() => import("./pages/AdminLoginPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminProducts = lazy(() => import("./pages/AdminProducts"));
@@ -25,9 +25,30 @@ export default function App() {
       <Routes>
         {/* Agrupa todas las rutas públicas bajo el PublicLayout */}
         <Route path="/" element={<PublicLayout />}>
-          <Route index element={<Home />} />
-          <Route path="catalogo" element={<Catalogo />} />
-          <Route path="sobre-nosotros" element={<AboutUs />} />
+          <Route
+            index
+            element={
+              <Suspense fallback={<div className="p-5 text-center">Cargando...</div>}>
+                <Home />
+              </Suspense>
+            }
+          />
+          <Route
+            path="catalogo"
+            element={
+              <Suspense fallback={<div className="p-5 text-center">Cargando...</div>}>
+                <Catalogo />
+              </Suspense>
+            }
+          />
+          <Route
+            path="sobre-nosotros"
+            element={
+              <Suspense fallback={<div className="p-5 text-center">Cargando...</div>}>
+                <AboutUs />
+              </Suspense>
+            }
+          />
         </Route>
 
         {/* Rutas de administración fuera del layout público */}

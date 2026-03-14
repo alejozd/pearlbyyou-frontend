@@ -25,6 +25,7 @@ export default function ProductCard({ product }) {
       <img
         src={fullImageUrl}
         alt={product.nombre}
+        loading="lazy"
         style={{ width: "100%", display: "block", cursor: "zoom-in", aspectRatio: "4 / 5", objectFit: "cover" }}
         onClick={() => handleImageClick(fullImageUrl)}
       />
@@ -35,10 +36,15 @@ export default function ProductCard({ product }) {
     <div className="overflow-hidden border-round-xl product-media">
       <Galleria
         value={product.imagenes}
-        numVisible={4}
+        numVisible={5}
         item={itemTemplate}
-        showItemNavigators
+        showItemNavigators={false}
+        showIndicators
         showThumbnails={false}
+        circular
+        autoPlay
+        transitionInterval={4000}
+        style={{ width: "100%" }}
       />
     </div>
   );
@@ -58,7 +64,7 @@ export default function ProductCard({ product }) {
         </div>
       </Card>
 
-      <Dialog header={product.nombre} visible={isModalVisible} style={{ width: "90vw", maxWidth: "720px" }} onHide={() => setIsModalVisible(false)} modal>
+      <Dialog header={product.nombre} visible={isModalVisible} style={{ width: "95vw", maxWidth: "720px" }} onHide={() => setIsModalVisible(false)} modal dismissableMask>
         {selectedImage && (
           <img
             src={selectedImage}

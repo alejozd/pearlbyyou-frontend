@@ -69,37 +69,42 @@ export default function AdminLoginPage() {
         <Divider className="my-3" />
 
         <form onSubmit={handleLogin} className="p-fluid flex flex-column gap-4">
-          <FloatLabel>
-            <InputText
-              id="admin-email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-              autoComplete="username"
-            />
-            <label htmlFor="admin-email">Correo electrónico</label>
-          </FloatLabel>
+          <div className="field">
+            <FloatLabel>
+              <InputText
+                id="admin-email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+                autoComplete="username"
+                className="p-inputtext-lg"
+              />
+              <label htmlFor="admin-email">Correo electrónico</label>
+            </FloatLabel>
+          </div>
 
-          <FloatLabel>
-            <Password
-              id="admin-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              feedback={false}
-              toggleMask
-              disabled={loading}
-              inputClassName="w-full"
-              autoComplete="current-password"
-            />
-            <label htmlFor="admin-password">Contraseña</label>
-          </FloatLabel>
+          <div className="field">
+            <FloatLabel>
+              <Password
+                id="admin-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                feedback={false}
+                toggleMask
+                disabled={loading}
+                inputClassName="w-full p-inputtext-lg"
+                autoComplete="current-password"
+              />
+              <label htmlFor="admin-password">Contraseña</label>
+            </FloatLabel>
+          </div>
 
           <Button
             type="submit"
             label="Ingresar al panel"
             icon="pi pi-lock-open"
             loading={loading}
-            className="whatsapp-pill"
+            className="whatsapp-pill p-button-lg"
           />
         </form>
       </Card>
