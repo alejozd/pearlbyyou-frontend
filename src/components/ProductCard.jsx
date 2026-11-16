@@ -3,6 +3,7 @@ import { Card } from "primereact/card";
 import { Galleria } from "primereact/galleria";
 import { Dialog } from "primereact/dialog";
 import WhatsAppButton from "./WhatsAppButton";
+import { conTransicion } from "../utils/viewTransition";
 
 const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL;
 
@@ -18,8 +19,10 @@ export default function ProductCard({ product }) {
   }
 
   const handleImageClick = (imageUrl) => {
-    setSelectedImage(imageUrl);
-    setIsModalVisible(true);
+    conTransicion(() => {
+      setSelectedImage(imageUrl);
+      setIsModalVisible(true);
+    });
   };
 
   const itemTemplate = (item) => {
@@ -77,7 +80,7 @@ export default function ProductCard({ product }) {
         </div>
       </Card>
 
-      <Dialog header={product.nombre} visible={isModalVisible} style={{ width: "95vw", maxWidth: "720px" }} onHide={() => setIsModalVisible(false)} modal dismissableMask>
+      <Dialog header={product.nombre} visible={isModalVisible} style={{ width: "95vw", maxWidth: "720px" }} onHide={() => conTransicion(() => setIsModalVisible(false))} modal dismissableMask>
         {selectedImage && (
           <picture>
             <source type="image/webp" srcSet={urlWebp(selectedImage)} />

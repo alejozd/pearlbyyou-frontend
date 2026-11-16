@@ -296,3 +296,35 @@ html {
   background: #f8eee3;
   border: 1px solid #ead9c8;
 }
+
+/* ---------- View Transitions ---------- */
+/* Transicion nativa al abrir y cerrar la foto ampliada del bolso. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 200ms;
+    animation-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
+  }
+
+  ::view-transition-old(root) {
+    animation-name: vt-salida;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: vt-entrada;
+  }
+}
+
+@keyframes vt-salida {
+  to {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+}
+
+@keyframes vt-entrada {
+  from {
+    opacity: 0;
+    transform: scale(1.01);
+  }
+}
