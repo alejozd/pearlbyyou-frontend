@@ -10,6 +10,15 @@ const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL;
 // El backend genera la version WebP bajo demanda; si no existe, redirige a la original.
 const urlWebp = (url) => url.replace(/\.(jpe?g|png)(?=$|\?)/i, ".webp");
 
+// Variantes que el backend escala al vuelo (?w=NNN): el movil baja ~6 KB en vez de 100 KB.
+const ANCHOS = [400, 800, 1200];
+const srcSetWebp = (url) => {
+  const base = urlWebp(url);
+  return ANCHOS.map((w) => `${base}?w=${w} ${w}w`).join(", ");
+};
+// La tarjeta ocupa casi todo el ancho en movil y un tercio en escritorio.
+const SIZES = "(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 30vw";
+
 export default function ProductCard({ product }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -32,7 +41,7 @@ export default function ProductCard({ product }) {
     const esPrincipal = product.imagenes[0]?.url === item.url;
     return (
       <picture className="product-picture">
-        <source type="image/webp" srcSet={urlWebp(fullImageUrl)} />
+        <source type="image/webp" srcSet={srcSetWebp(fullImageUrl)} sizes={SIZES} />
         <img
           src={fullImageUrl}
           alt={product.nombre}
@@ -83,10 +92,11 @@ export default function ProductCard({ product }) {
       <Dialog header={product.nombre} visible={isModalVisible} style={{ width: "95vw", maxWidth: "720px" }} onHide={() => conTransicion(() => setIsModalVisible(false))} modal dismissableMask>
         {selectedImage && (
           <picture>
-            <source type="image/webp" srcSet={urlWebp(selectedImage)} />
+            <source type="image/webp" srcSet={srcSetWebp(selectedImage)} sizes="(max-width: 720px) 95vw, 720px" />
             <img
               src={selectedImage}
               alt={product.nombre}
+              decoding="async"
               style={{ width: "100%", display: "block", borderRadius: "1rem" }}
             />
           </picture>
