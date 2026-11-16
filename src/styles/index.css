@@ -70,6 +70,33 @@ html {
   box-shadow: var(--pearl-shadow);
 }
 
+/* La tarjeta responde a su propio ancho (el numero de tarjetas visibles cambia
+   segun el carrusel), no al del viewport. */
+.product-card {
+  container-type: inline-size;
+}
+
+@container (max-width: 240px) {
+  .product-card-title {
+    font-size: 0.95rem;
+    line-height: 1.25;
+  }
+
+  .product-card-price {
+    font-size: 1.1rem !important;
+  }
+}
+
+@container (min-width: 380px) {
+  .product-card-title {
+    font-size: 1.3rem;
+  }
+
+  .product-card-price {
+    font-size: 1.5rem !important;
+  }
+}
+
 .text-pearl {
   color: var(--pearl-text);
 }
