@@ -17,7 +17,7 @@ export default function NavBar() {
 
   const start = (
     <Link to="/" className="flex align-items-center gap-2 no-underline pr-2">
-      <img src={logo} alt="Pearl by You" className="h-2rem md:h-3rem w-auto" />
+      <img src={logo} alt="Pearl by You" width="120" height="40" className="h-2rem md:h-3rem w-auto" />
       <span className="font-semibold text-sm hidden sm:block">Pearl by You</span>
     </Link>
   );

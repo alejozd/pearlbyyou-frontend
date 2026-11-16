@@ -69,7 +69,7 @@ export default function ProductCard({ product }) {
     <div className="p-2 h-full">
       <Card header={header} className="transform-hover h-full flex flex-column soft-card product-card">
         <div className="text-center px-2 pb-2">
-          <h3 className="product-card-title mt-2 mb-1 font-semibold text-xl text-900">{product.nombre}</h3>
+          <h2 className="product-card-title mt-2 mb-1 font-semibold text-xl text-900">{product.nombre}</h2>
           <p className="product-card-price mt-0 mb-2 text-2xl font-medium" style={{ color: "#8b5e3c" }}>
             ${Number(product.precio).toLocaleString("es-CO")}
           </p>

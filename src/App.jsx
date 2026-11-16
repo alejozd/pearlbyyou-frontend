@@ -17,7 +17,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminProducts = lazy(() => import("./pages/AdminProducts"));
 const AdminProductForm = lazy(() => import("./pages/AdminProductForm"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
-import AdminSettings from "./pages/AdminSettings";
+const AdminSettings = lazy(() => import("./pages/AdminSettings"));
 
 export default function App() {
   return (

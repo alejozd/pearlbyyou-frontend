@@ -33,9 +33,10 @@ a {
 }
 
 .min-app {
-  /* 100vh fallback + 100dvh para moviles con barra del navegador visible */
+  /* 100vh fallback + svh (altura estable). dvh cambia cuando el navegador movil
+     muestra u oculta su barra, y eso provoca saltos de layout. */
   min-height: calc(100vh - 180px);
-  min-height: calc(100dvh - 180px);
+  min-height: calc(100svh - 180px);
 }
 
 .page-shell {
@@ -55,6 +56,8 @@ h3,
 html {
   scrollbar-color: var(--pearl-accent) var(--pearl-surface-strong);
   scrollbar-width: thin;
+  /* Reserva el hueco de la barra: evita el salto lateral al cargar contenido */
+  scrollbar-gutter: stable;
 }
 
 .brand-gradient-text {
