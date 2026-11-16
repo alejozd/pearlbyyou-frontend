@@ -33,12 +33,28 @@ a {
 }
 
 .min-app {
+  /* 100vh fallback + 100dvh para moviles con barra del navegador visible */
   min-height: calc(100vh - 180px);
+  min-height: calc(100dvh - 180px);
 }
 
 .page-shell {
   width: min(1200px, 92vw);
   margin: 2rem auto 0;
+}
+
+/* Titulos sin lineas huerfanas al final */
+h1,
+h2,
+h3,
+.section-title {
+  text-wrap: balance;
+}
+
+/* Scrollbar acorde a la paleta de la tienda (propiedad estandar) */
+html {
+  scrollbar-color: var(--pearl-accent) var(--pearl-surface-strong);
+  scrollbar-width: thin;
 }
 
 .brand-gradient-text {

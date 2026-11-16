@@ -21,11 +21,18 @@ export default function ProductCard({ product }) {
 
   const itemTemplate = (item) => {
     const fullImageUrl = `${BASE_IMG_URL}${item.url}`;
+    // La primera imagen es el LCP del catalogo: se carga con prioridad alta.
+    // Las siguientes se difieren y se decodifican en segundo plano.
+    const esPrincipal = product.imagenes[0]?.url === item.url;
     return (
       <img
         src={fullImageUrl}
         alt={product.nombre}
-        loading="lazy"
+        loading={esPrincipal ? "eager" : "lazy"}
+        fetchPriority={esPrincipal ? "high" : "auto"}
+        decoding="async"
+        width="800"
+        height="1000"
         style={{ width: "100%", display: "block", cursor: "zoom-in", aspectRatio: "4 / 5", objectFit: "cover" }}
         onClick={() => handleImageClick(fullImageUrl)}
       />
