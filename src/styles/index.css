@@ -76,6 +76,12 @@ html {
   container-type: inline-size;
 }
 
+/* <picture> que envuelve la imagen con respaldo WebP */
+.product-picture {
+  display: block;
+  width: 100%;
+}
+
 @container (max-width: 240px) {
   .product-card-title {
     font-size: 0.95rem;

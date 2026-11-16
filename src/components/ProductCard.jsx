@@ -6,6 +6,9 @@ import WhatsAppButton from "./WhatsAppButton";
 
 const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL;
 
+// El backend genera la version WebP bajo demanda; si no existe, redirige a la original.
+const urlWebp = (url) => url.replace(/\.(jpe?g|png)(?=$|\?)/i, ".webp");
+
 export default function ProductCard({ product }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -25,17 +28,20 @@ export default function ProductCard({ product }) {
     // Las siguientes se difieren y se decodifican en segundo plano.
     const esPrincipal = product.imagenes[0]?.url === item.url;
     return (
-      <img
-        src={fullImageUrl}
-        alt={product.nombre}
-        loading={esPrincipal ? "eager" : "lazy"}
-        fetchPriority={esPrincipal ? "high" : "auto"}
-        decoding="async"
-        width="800"
-        height="1000"
-        style={{ width: "100%", display: "block", cursor: "zoom-in", aspectRatio: "4 / 5", objectFit: "cover" }}
-        onClick={() => handleImageClick(fullImageUrl)}
-      />
+      <picture className="product-picture">
+        <source type="image/webp" srcSet={urlWebp(fullImageUrl)} />
+        <img
+          src={fullImageUrl}
+          alt={product.nombre}
+          loading={esPrincipal ? "eager" : "lazy"}
+          fetchPriority={esPrincipal ? "high" : "auto"}
+          decoding="async"
+          width="800"
+          height="1000"
+          style={{ width: "100%", display: "block", cursor: "zoom-in", aspectRatio: "4 / 5", objectFit: "cover" }}
+          onClick={() => handleImageClick(fullImageUrl)}
+        />
+      </picture>
     );
   };
 
@@ -73,11 +79,14 @@ export default function ProductCard({ product }) {
 
       <Dialog header={product.nombre} visible={isModalVisible} style={{ width: "95vw", maxWidth: "720px" }} onHide={() => setIsModalVisible(false)} modal dismissableMask>
         {selectedImage && (
-          <img
-            src={selectedImage}
-            alt={product.nombre}
-            style={{ width: "100%", display: "block", borderRadius: "1rem" }}
-          />
+          <picture>
+            <source type="image/webp" srcSet={urlWebp(selectedImage)} />
+            <img
+              src={selectedImage}
+              alt={product.nombre}
+              style={{ width: "100%", display: "block", borderRadius: "1rem" }}
+            />
+          </picture>
         )}
       </Dialog>
     </div>
