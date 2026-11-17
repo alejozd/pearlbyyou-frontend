@@ -11,9 +11,9 @@
       name="description"
       content="Pearl - Bolsos y accesorios. Catalogo, pedidos por WhatsApp y atencion personalizada."
     />
-    <!-- Adelanta la conexion con el host de las fotos (mejora el LCP del catalogo) -->
-    <link rel="preconnect" href="https://pearlbyou.zdevs.uk" crossorigin />
-    <link rel="dns-prefetch" href="https://pearlbyou.zdevs.uk" />
+    <!-- Las fotos se sirven desde este mismo origen, asi que no hace falta
+         preconnect: el anterior apuntaba a un dominio que ni existe (le faltaba
+         una "y") y no aportaba nada. -->
     <title>Pearl - Tu Bolso, Tu Mood</title>
   </head>
   <body>
