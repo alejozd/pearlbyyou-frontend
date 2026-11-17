@@ -116,7 +116,9 @@ export default function AdminUsers() {
   const toggleStatus = async (adminId, active) => {
     setLoading(true);
     try {
-      await apiClient.put(`/admin-management/${adminId}/status`, { is_active: !active }, { headers: { Authorization: `Bearer ${token}` } });
+      // El backend expone PATCH /admin-management/:id/status (no PUT): con PUT
+      // esta llamada devolvia 404 y el boton no hacia nada.
+      await apiClient.patch(`/admin-management/${adminId}/status`, { is_active: !active }, { headers: { Authorization: `Bearer ${token}` } });
       toast.current.show({
         severity: "success",
         summary: "Éxito",
