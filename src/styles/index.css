@@ -112,6 +112,22 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* ---------- Layout del navbar ----------
+   El Menubar de PrimeReact se montaba en el primer frame sin su layout (salía
+   apilado y 80 px mas alto) porque su CSS se aplica despues que el resto: al
+   corregirse, la pagina entera saltaba (CLS 0.82). Repitiendo aqui las tres
+   reglas que lo colocan, el menu ya nace bien y no hay salto. */
+.p-menubar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.p-menubar-end {
+  margin-left: auto;
+}
+
 .brand-gradient-text {
   background: linear-gradient(120deg, var(--pearl-primary), #b98152);
   -webkit-background-clip: text;
