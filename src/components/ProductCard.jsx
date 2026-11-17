@@ -40,6 +40,8 @@ export default function ProductCard({ product }) {
     // La primera imagen es el LCP del catalogo: se carga con prioridad alta.
     // Las siguientes se difieren y se decodifican en segundo plano.
     const esPrincipal = product.imagenes[0]?.url === item.url;
+    // height:auto es imprescindible: sin el, el atributo height fija 1000 px
+    // y anula el aspect-ratio, por lo que la foto se estiraba a 326x1000.
     return (
       <picture className="product-picture">
         <source type="image/webp" srcSet={srcSetWebp(fullImageUrl)} sizes={SIZES} />
@@ -51,7 +53,7 @@ export default function ProductCard({ product }) {
           decoding="async"
           width="800"
           height="1000"
-          style={{ width: "100%", display: "block", cursor: "zoom-in", aspectRatio: "4 / 5", objectFit: "cover" }}
+          style={{ width: "100%", height: "auto", display: "block", cursor: "zoom-in", aspectRatio: "4 / 5", objectFit: "cover" }}
           onClick={() => handleImageClick(fullImageUrl)}
         />
       </picture>
