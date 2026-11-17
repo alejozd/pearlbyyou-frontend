@@ -17,7 +17,18 @@ export default function NavBar() {
 
   const start = (
     <Link to="/" className="flex align-items-center gap-2 no-underline pr-2">
-      <img src={logo} alt="Pearl by You" width="120" height="40" className="h-2rem md:h-3rem w-auto" />
+      {/* El logo real es casi cuadrado (32x32). Antes llevaba width/height 120x40
+          y `w-auto`: antes de cargar ocupaba 144 px de ancho y al cargar pasaba a
+          ~50, el menu se recolocaba y empujaba toda la pagina (CLS 0.62).
+          Ahora el ancho va fijado en CSS, asi que no cambia al cargar. */}
+      <img
+        src={logo}
+        alt="Pearl by You"
+        width="48"
+        height="48"
+        className="h-2rem md:h-3rem w-2rem md:w-3rem"
+        style={{ objectFit: "contain" }}
+      />
       <span className="font-semibold text-sm hidden sm:block">Pearl by You</span>
     </Link>
   );

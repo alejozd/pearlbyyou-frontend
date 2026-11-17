@@ -21,9 +21,61 @@ body,
   min-height: 100%;
 }
 
+/* ---------- Tipografia ----------
+   El tema de PrimeReact declara Inter SIN font-display, asi que el navegador
+   aplica "block": el texto queda invisible hasta que llega la fuente y, al
+   entrar, los anchos cambian y el menu se recoloca empujando la pagina
+   (CLS medido 0.63 en escritorio). Aqui se redeclara la misma familia con
+   `swap` y un fallback con metricas parecidas, para que el intercambio no
+   mueva nada. Los .woff2 viven en src/assets/fonts. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/Inter-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/Inter-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/Inter-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/Inter-Bold.woff2") format("woff2");
+}
+
+/* Fallback con metricas ajustadas a Inter: mientras llega la fuente real, el
+   texto se pinta con esta y ocupa practicamente lo mismo, asi que el cambio
+   no provoca salto. Si se cambia de fuente, ajustar size-adjust midiendo. */
+@font-face {
+  font-family: "InterAjustada";
+  src: local("Segoe UI"), local("Roboto"), local("Helvetica Neue"), local("Arial");
+  size-adjust: 107%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --font-family: "Inter", "InterAjustada", "Segoe UI", Roboto, sans-serif;
+}
+
 body {
   margin: 0;
-  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", "InterAjustada", "Segoe UI", Roboto, sans-serif;
   color: var(--pearl-text);
   background: radial-gradient(circle at top, #fffdf9 0%, var(--pearl-bg) 55%, #f1e9dd 100%);
 }
@@ -331,3 +383,11 @@ html {
     transform: scale(1.01);
   }
 }
+
+/* ---------- Orden de las hojas en el build ---------- */
+/* El CLS de escritorio (0.82) no venia de la tipografia ni de las imagenes:
+   Vite colocaba el <script type="module"> ANTES de los <link rel="stylesheet">,
+   asi que React pintaba el primer frame sin el CSS de PrimeReact (menu apilado)
+   y, al aplicarse el CSS, la pagina saltaba. Se corrige en el build con
+   scripts/ordenar-css.js (enganchado como "postbuild" en package.json).
+   Medido: CLS 0.82 -> 0. */

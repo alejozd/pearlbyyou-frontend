@@ -7,7 +7,11 @@ import AdminLayout from "./layouts/AdminLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // ✅ Importa todas las páginas de forma perezosa para optimizar carga inicial en móviles
-const Home = lazy(() => import("./pages/Home"));
+// Excepcion: la portada (Home) va en el bundle principal. Con lazy, el hero de la
+// portada aparecia un ciclo despues que el resto y empujaba el pie de pagina
+// (CLS 0.19 y un viaje de red extra para el LCP).
+import Home from "./pages/Home";
+
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Catalogo = lazy(() => import("./pages/Catalogo"));
 
@@ -25,14 +29,7 @@ export default function App() {
       <Routes>
         {/* Agrupa todas las rutas públicas bajo el PublicLayout */}
         <Route path="/" element={<PublicLayout />}>
-          <Route
-            index
-            element={
-              <Suspense fallback={<div className="p-5 text-center">Cargando...</div>}>
-                <Home />
-              </Suspense>
-            }
-          />
+          <Route index element={<Home />} />
           <Route
             path="catalogo"
             element={
