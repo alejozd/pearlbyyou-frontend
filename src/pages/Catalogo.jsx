@@ -4,6 +4,7 @@ import ProductCarousel from "../components/ProductCarousel";
 import { Skeleton } from "primereact/skeleton";
 import { Card } from "primereact/card";
 import apiClient from "../utils/axios";
+import { listaDe } from "../utils/listaDe";
 
 export default function Catalogo() {
   const [products, setProducts] = useState([]);
@@ -14,7 +15,8 @@ export default function Catalogo() {
     setLoading(true);
     try {
       const response = await apiClient.get("/productos");
-      setProducts(Array.isArray(response.data) ? response.data : []);
+      // La API puede devolver un array o { productos: [...] } paginado.
+      setProducts(listaDe(response.data));
     } catch (error) {
       console.error("Error al obtener los productos:", error);
       toast.current.show({

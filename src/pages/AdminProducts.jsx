@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import apiClient from "../utils/axios";
+import { listaDe } from "../utils/listaDe";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
@@ -23,7 +24,7 @@ export default function AdminProducts() {
     try {
       const endpoint = showInactive ? "/productos/inactivos" : "/productos";
       const response = await apiClient.get(endpoint, authConfig());
-      setProducts(Array.isArray(response.data) ? response.data : []);
+      setProducts(listaDe(response.data));
     } catch {
       toast.current.show({
         severity: "error",
