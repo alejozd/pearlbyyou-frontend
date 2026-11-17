@@ -11,7 +11,8 @@ import { Toast } from "primereact/toast";
 import { Image } from "primereact/image";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL;
+// Base de las fotos. Vacia = mismo origen que sirve la pagina.
+const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL || "";
 
 export default function AdminProductForm() {
   const { id } = useParams();

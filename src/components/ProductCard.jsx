@@ -5,7 +5,8 @@ import { Dialog } from "primereact/dialog";
 import WhatsAppButton from "./WhatsAppButton";
 import { conTransicion } from "../utils/viewTransition";
 
-const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL;
+// Base de las fotos. Vacia = mismo origen que sirve la pagina.
+const BASE_IMG_URL = import.meta.env.VITE_BASE_IMG_URL || "";
 
 // El backend genera la version WebP bajo demanda; si no existe, redirige a la original.
 const urlWebp = (url) => url.replace(/\.(jpe?g|png)(?=$|\?)/i, ".webp");
